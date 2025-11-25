@@ -1,5 +1,3 @@
-🎬 Movie App – Android + Flutter (Hybrid Feature)
-
 A modern movie browsing application built using Android (Kotlin, MVVM, Room, Retrofit) with an additional Flutter module to satisfy project grading requirements.
 
 This project follows clean architecture, strong code quality, responsive UI design, proper persistence layer, and integrated testing.
@@ -65,8 +63,6 @@ Watchlist
 
 Full CRUD (Insert, Update, Delete, Query)
 
-
-
 ✔ Testing (2%)
 
 Tools used:
@@ -102,6 +98,7 @@ Connected with local Room user data
 This satisfies the “feature not covered in class” requirement
 
 📱 App Features
+
 🎬 Movie Features
 
 Browse trending movies
@@ -150,7 +147,9 @@ Networking	Retrofit + Coroutines
 Testing	JUnit, Mockito, Espresso
 Stretch	Firebase Authentication
 Version Control	GitHub
+
 📂 Project Structure
+
 ```
 app/
 │
@@ -173,7 +172,9 @@ app/
 │   └── pubspec.yaml
 │
 └── tests/
+
 ```
+
 👥 Task Distribution (4 Members)
 
 Below is a clean and fair task division mapped directly to the rubric categories.
@@ -220,12 +221,6 @@ Rubric Match:
 🌐 Member 3 – API + Flutter Developer
 Responsibilities
 
-Integrated Retrofit API
-
-Built API service interfaces
-
-Managed network responses + DTO mapping
-
 Created Flutter mini-app (Material UI + State handling)
 
 Connected Android → Flutter via Intent
@@ -270,9 +265,9 @@ Flutter tests: Basic Widget test
 📸 Screenshots (Optional)
 
 <p align="center">
-  <a href="#" target="_blank">
-    <img src="#" alt="UI design images" border="0" width="700" />
-  </a>
+<a href="#" target="_blank">
+<img src="#" alt="UI design images" border="0" width="700" />
+</a>
 </p>
 
 🎤 Individual Reflections
@@ -292,8 +287,10 @@ Sync Gradle
 Run app on emulator or device
 
 Flutter Module
+
 ```
 cd flutter_module
 flutter pub get
 flutter run
+
 ```
