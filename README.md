@@ -269,7 +269,11 @@ Flutter tests: Basic Widget test
 
 📸 Screenshots (Optional)
 
-(Here you can add images of your UI)
+<p align="center">
+  <a href="#" target="_blank">
+    <img src="#" alt="UI design images" border="0" width="700" />
+  </a>
+</p>
 
 🎤 Individual Reflections
 
