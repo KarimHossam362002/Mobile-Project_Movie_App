@@ -1,3 +1,5 @@
+# 🎬 Movie App – Android + Flutter (Hybrid Feature)
+
 A modern movie browsing application built using Android (Kotlin, MVVM, Room, Retrofit) with an additional Flutter module to satisfy project grading requirements.
 
 This project follows clean architecture, strong code quality, responsive UI design, proper persistence layer, and integrated testing.
