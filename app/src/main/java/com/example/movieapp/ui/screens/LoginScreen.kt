@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -57,14 +58,13 @@ import com.example.movieapp.ui.theme.White
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreen( modifier: Modifier = Modifier){
+fun LoginScreen(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0,9,17))
-    )
-    {
-        //background image
+            .background(Color(0, 9, 17))
+    ) {
+        // Background image
         Image(
             painter = painterResource(id = R.drawable.login_background),
             contentDescription = "Background",
@@ -72,30 +72,29 @@ fun LoginScreen( modifier: Modifier = Modifier){
             modifier = Modifier.fillMaxSize(),
             alpha = 0.1f,
         )
+
         Column(
-            modifier = modifier
-                .fillMaxWidth()
+            modifier = Modifier // Note: Use Modifier here, not the passed 'modifier' to avoid double padding
+                .fillMaxSize() // 1. CHANGE: Column must fill size for weight to work
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(Modifier.height(100.dp)) // You might want to reduce this on small screens too
 
-        )
-        {
-            Spacer(Modifier.height(100.dp))
-
-            //icon
+            // Icon
             Image(
                 painter = painterResource(id = R.drawable.movieicon),
                 contentDescription = "logo",
                 modifier = Modifier.size(150.dp)
             )
 
-            //welcome
+            // Welcome Text
             Spacer(Modifier.height(20.dp))
-            Text(text = "Welcome back!",fontSize = 30.sp, color = White)
+            Text(text = "Welcome back!", fontSize = 30.sp, color = White)
             Spacer(Modifier.height(10.dp))
-            Text(text = "Please sign in to youre account",fontSize = 15.sp, color = White)
+            Text(text = "Please sign in to your account", fontSize = 15.sp, color = White)
 
-            //username field
+            // Username field
             Spacer(Modifier.height(50.dp))
             var nameInput by remember { mutableStateOf("") }
             TextField(
@@ -107,69 +106,81 @@ fun LoginScreen( modifier: Modifier = Modifier){
                 colors = TextFieldDefaults.colors(
                     unfocusedTextColor = White,
                     focusedTextColor = White,
-
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-
                     unfocusedLabelColor = Color.LightGray,
                     focusedLabelColor = Color.White,
-
                     unfocusedContainerColor = Darkblue,
                     focusedContainerColor = Darkblue,
                 )
             )
-            //password field
+
+            // Password field
             Spacer(Modifier.height(32.dp))
-            var passowrd by remember { mutableStateOf("") }
+            var password by remember { mutableStateOf("") }
             var passwordVisible by remember { mutableStateOf(false) }
             TextField(
-                value = passowrd,
-                onValueChange = { passowrd = it },
+                value = password,
+                onValueChange = { password = it },
                 label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 trailingIcon = {
-                    val image = if (passwordVisible)
-                        Icons.Filled.Visibility
-                    else
-                        Icons.Filled.VisibilityOff
-
+                    val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                     Icon(
                         imageVector = image,
                         contentDescription = if (passwordVisible) "Hide password" else "Show password",
-                        modifier = Modifier.clickable() { passwordVisible = !passwordVisible }
+                        modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                     )
                 },
                 colors = TextFieldDefaults.colors(
-
                     unfocusedTextColor = White,
                     focusedTextColor = White,
-
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
-
                     unfocusedLabelColor = Color.LightGray,
                     focusedLabelColor = Color.White,
-
                     unfocusedContainerColor = Darkblue,
                     focusedContainerColor = Darkblue,
                 )
             )
-            Spacer(Modifier.height(170.dp))
-            Button(onClick = {}, colors = ButtonDefaults.buttonColors(
-                containerColor = Blue,
-                contentColor = White,
-            ),modifier = Modifier.width(300.dp),) {Text("Sign in")  }
 
-            Row(
-                modifier = modifier.fillMaxWidth().padding(horizontal = 50.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ){Text(text = "Don't have an account ?",fontSize = 15.sp, color = White)
-              TextButton(onClick = { },contentPadding = PaddingValues(0.dp)) {
-                  Text(text = "Sign Up", color = Color.White,fontSize = 15.sp, fontWeight = FontWeight.Bold,)  }
+            // 2. CHANGE: Replace fixed 170.dp with weight(1f)
+            // This pushes the button down, but keeps it on screen
+            Spacer(Modifier.weight(1f))
+
+            Button(
+                onClick = {},
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Blue,
+                    contentColor = White,
+                ),
+                modifier = Modifier
+                    .fillMaxWidth() // Usually looks better than fixed width
+                    .height(50.dp) // Give button some height
+            ) {
+                Text("Sign in")
             }
 
+            // Sign Up Row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp), // Add padding at the very bottom
+                horizontalArrangement = Arrangement.Center, // Center the row
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = "Don't have an account?", fontSize = 15.sp, color = White)
+                TextButton(onClick = {}, contentPadding = PaddingValues(start = 5.dp)) {
+                    Text(
+                        text = "Sign Up",
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+            }
         }
     }
 }
