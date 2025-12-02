@@ -1,19 +1,9 @@
 package com.example.movieapp.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,10 +39,10 @@ val InwardWaveShape = GenericShape { size, _ ->
 
 @Preview(showBackground = true)
 @Composable
-fun WelcomeScreen( modifier: Modifier = Modifier){
+fun WelcomeScreen( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = {}){
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+
     )
     {
         //background image
@@ -96,7 +86,7 @@ fun WelcomeScreen( modifier: Modifier = Modifier){
             Spacer(Modifier.height(48.dp))
 
             Button(
-                onClick = { },
+                onClick = onNavigateToLogin,
                 colors = ButtonDefaults.buttonColors(containerColor = Blue),
                 shape = RoundedCornerShape(10.dp), // Rounded corners for the button
                 modifier = Modifier
