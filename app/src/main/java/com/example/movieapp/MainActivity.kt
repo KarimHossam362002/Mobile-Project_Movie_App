@@ -1,159 +1,50 @@
 package com.example.movieapp
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Surface
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.movieapp.data.Movie
-import com.example.movieapp.data.User
-import com.example.movieapp.ui.components.FloatingBottomNavigationBar
-import com.example.movieapp.ui.screens.FavoritesScreen
-import com.example.movieapp.ui.screens.HomeScreen
-import com.example.movieapp.ui.screens.MovieDetailsScreen
-import com.example.movieapp.ui.screens.ProfileScreen
-import com.example.movieapp.ui.screens.SearchScreen
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.movieapp.ui.theme.MovieAppTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.sp
+import com.example.movieapp.ui.screens.LoginScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             MovieAppTheme {
-                MovieAppMain()
-            }
-        }
-    }
-}
-
-@Composable
-fun MovieAppMain() {
-    val navController = rememberNavController()
-    var favoriteMovieIds by remember { mutableStateOf<Set<Int>>(emptySet()) }
-    val currentUser = User(username = "Guest", email = "guest@movieapp.com", password = "")
-
-    val movies = listOf(
-        Movie(
-            movieId = 1,
-            title = "The Beekeeper",
-            rating = 8.5,
-            posterUrl = "assets/beekeeper.jpg",
-            releaseDate = "2025"
-        ),
-        Movie(
-            movieId = 2,
-            title = "Lilo & Stitch",
-            rating = 7.2,
-            posterUrl = "assets/lilo.jpg",
-            releaseDate = "2025"
-        ),
-        Movie(
-            movieId = 3,
-            title = "House of David",
-            rating = 7.8,
-            posterUrl = "assets/david.jpg",
-            releaseDate = "2025"
-        ),
-        Movie(
-            movieId = 4,
-            title = "Mickey 17",
-            rating = 6.1,
-            posterUrl = "assets/mickey.jpg",
-            releaseDate = "2025"
-        )
-    )
-
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route
-
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = Color(0xFF1A1A2E)
-    ) {
-        Scaffold(
-            bottomBar = {
-                FloatingBottomNavigationBar(
-                    selectedRoute = currentRoute ?: "home",
-                    onNavigate = { route ->
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color(0xFF16213E))
-                )
-            }
-        ) { paddingValues ->
-            NavHost(
-                navController = navController,
-                startDestination = "home",
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                composable("home") {
-                    HomeScreen(
-                        movies = movies,
-                        onMovieClick = { movieId ->
-                            navController.navigate("details/$movieId")
-                        }
-                    )
-                }
-                composable("search") {
-                    SearchScreen(
-                        allMovies = movies,
-                        onMovieClick = { movieId ->
-                            navController.navigate("details/$movieId")
-                        }
-                    )
-                }
-                composable("favorites") {
-                    FavoritesScreen(
-                        favoriteMovies = movies.filter { it.movieId in favoriteMovieIds },
-                        onMovieClick = { movieId ->
-                            navController.navigate("details/$movieId")
-                        }
-                    )
-                }
-                composable("profile") {
-                    ProfileScreen(
-                        currentUser = currentUser
-                    )
-                }
-                composable("details/{movieId}") { backStackEntry ->
-                    val movieId = backStackEntry.arguments?.getString("movieId")?.toInt() ?: 0
-                    val selectedMovie = movies.find { it.movieId == movieId }
-                    if (selectedMovie != null) {
-                        MovieDetailsScreen(
-                            movie = selectedMovie,
-                            onBackClick = { navController.popBackStack() },
-                            onAddToFavorites = {
-                                favoriteMovieIds = favoriteMovieIds.toMutableSet().apply {
-                                    if (movieId in this) {
-                                        remove(movieId)
-                                    } else {
-                                        add(movieId)
-                                    }
-                                }
-                            },
-                            //navController = navController,
-                            isFavorite = movieId in favoriteMovieIds
-                        )
-                    }
+                Scaffold(modifier = Modifier.fillMaxSize()) { paddingvalues ->
+                    LoginScreen(modifier = Modifier.padding(paddingvalues))
                 }
             }
         }
     }
 }
+
+
+
