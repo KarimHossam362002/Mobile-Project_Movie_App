@@ -13,7 +13,6 @@ import android.content.Context
 abstract class MovieDatabase : RoomDatabase() {
     abstract fun movieDao(): MovieDao
     abstract fun userDao(): UserDao
-
     companion object {
         @Volatile
         private var INSTANCE: MovieDatabase? = null

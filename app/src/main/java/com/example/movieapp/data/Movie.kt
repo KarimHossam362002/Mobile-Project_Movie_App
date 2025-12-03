@@ -1,8 +1,6 @@
 package com.example.movieapp.data
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(tableName = "movies")
 data class Movie(
@@ -13,8 +11,8 @@ data class Movie(
     @ColumnInfo(name = "title")
     val title: String,
 
-    @ColumnInfo(name = "description")
-    val description: String? = null,
+    @ColumnInfo(name = "overview")
+    val overview: String? = null,
 
     @ColumnInfo(name = "release_date")
     val releaseDate: String? = null,
@@ -27,4 +25,6 @@ data class Movie(
 
     @ColumnInfo(name = "rating")
     val rating: Double? = null
+
+
 )
