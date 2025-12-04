@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.movieapp.ui.theme.*
 
 @Composable
 fun CategoryFilter(
@@ -48,7 +49,7 @@ private fun CategoryButton(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(
-                if (isSelected) Color.White else Color(0xFF2A2A3E)
+                if (isSelected) Color.White else DarkBluishGray
             )
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 8.dp),

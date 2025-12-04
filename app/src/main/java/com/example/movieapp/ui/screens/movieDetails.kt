@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
+import com.example.movieapp.ui.theme.*
 
 
 @Composable
@@ -47,7 +48,7 @@ fun MovieDetailsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF1A1A2E))
+                .background(DarkBluePurple)
                 .verticalScroll(rememberScrollState())
         ) {
 
@@ -59,8 +60,8 @@ fun MovieDetailsScreen(
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
-                                Color(0xFF6200EE),
-                                Color(0xFF03DAC6)
+                                DarkPurple,
+                                Turquoise
                             )
                         )
                     )
@@ -175,7 +176,7 @@ fun MovieDetailsScreen(
                         .height(48.dp)
                         .clip(RoundedCornerShape(8.dp)),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6200EE)
+                        containerColor = DarkPurple
                     )
                 ) {
                     Icon(
@@ -257,7 +258,7 @@ private fun InfoChip(label: String, icon: ImageVector) {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF2A2A3E))
+            .background(DarkBluishGray)
             .padding(horizontal = 12.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -265,7 +266,7 @@ private fun InfoChip(label: String, icon: ImageVector) {
         Icon(
             imageVector = icon,
             contentDescription = label,
-            tint = Color(0xFF6200EE),
+            tint = DarkPurple,
             modifier = Modifier.size(14.dp)
         )
         Text(
@@ -283,7 +284,7 @@ private fun CastItem(name: String, role: String) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFF2A2A3E))
+            .background(DarkBluishGray)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -294,8 +295,8 @@ private fun CastItem(name: String, role: String) {
                 .background(
                     Brush.horizontalGradient(
                         colors = listOf(
-                            Color(0xFF6200EE),
-                            Color(0xFF03DAC6)
+                            DarkPurple,
+                            Turquoise
                         )
                     )
                 ),

@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import com.example.movieapp.ui.theme.*
 
 data class NavItem(
     val icon: ImageVector,
@@ -58,7 +59,7 @@ fun FloatingBottomNavigationBar(
                     elevation = 12.dp,
                     shape = RoundedCornerShape(50)
                 ),
-            color = Color(0xFF16213E).copy(alpha = 0.3f),
+            color = DarkIndigoBlue.copy(alpha = 0.3f),
             shape = RoundedCornerShape(70),
             tonalElevation = 0.dp
         ) {

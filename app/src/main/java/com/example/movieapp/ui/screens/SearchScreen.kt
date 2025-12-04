@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.components.MovieCard
+import com.example.movieapp.ui.theme.*
 
 @Composable
 fun SearchScreen(
@@ -47,7 +48,7 @@ fun SearchScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFF1A1A2E))
+                .background(DarkBluePurple)
         ) {
             BasicTextField(
                 value = searchQuery,
@@ -62,7 +63,7 @@ fun SearchScreen(
                         isFocused = focusState.isFocused
                     }
                     .background(
-                        color = Color(0xFF2A2A3E),
+                        color = DarkBluishGray,
                         shape = RoundedCornerShape(12.dp)
                     )
                     .padding(horizontal = 28.dp, vertical = 30.dp),
@@ -154,6 +155,14 @@ fun SearchScreen(
     }
 }
 
+/**
+ * A composable function that displays a single movie item in a search results list.
+ * It shows the movie's poster placeholder, title, release date, and rating.
+ * It also includes a "View" button to navigate to the movie's detail screen.
+ *
+ * @param movie The [Movie] object containing the data to display.
+ * @param onClick A lambda function to be invoked when the "View" button is clicked.
+ */
 @Composable
 private fun SearchResultItem(
     movie: Movie,
@@ -164,7 +173,7 @@ private fun SearchResultItem(
             .fillMaxWidth()
             .height(140.dp)
             .clip(RoundedCornerShape(12.dp))
-            .background(Color(0xFF2A2A3E))
+            .background(DarkBluishGray)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -176,8 +185,8 @@ private fun SearchResultItem(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            Color(0xFF6200EE),
-                            Color(0xFF03DAC6)
+                            DarkPurple,
+                            Turquoise
                         )
                     )
                 )
@@ -235,7 +244,7 @@ private fun SearchResultItem(
                 .height(40.dp)
                 .clip(RoundedCornerShape(8.dp)),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF6200EE)
+                containerColor = DarkPurple
             )
         ) {
             Text("View", fontSize = 14.sp)

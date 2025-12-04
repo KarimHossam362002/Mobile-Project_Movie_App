@@ -18,6 +18,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
+import com.example.movieapp.ui.theme.DarkPurple
+import com.example.movieapp.ui.theme.Turquoise
+
 
 @Composable
 fun MovieCard(
@@ -38,8 +41,8 @@ fun MovieCard(
                 .background(
                     brush = androidx.compose.ui.graphics.Brush.verticalGradient(
                         colors = listOf(
-                            Color(0xFF6200EE),
-                            Color(0xFF03DAC6)
+                           DarkPurple,
+                            Turquoise
                         )
                     )
                 )

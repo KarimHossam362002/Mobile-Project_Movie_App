@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.User
+import com.example.movieapp.ui.theme.*
 
 
 @Composable
@@ -60,7 +61,7 @@ fun ProfileScreen(
             Button(
                 onClick = { },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6200EE))
+                colors = ButtonDefaults.buttonColors(containerColor = DarkPurple)
             ) {
                 Text("Edit Profile", color = Color.White)
             }

@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.components.CategoryFilter
+import com.example.movieapp.ui.theme.*
 import kotlinx.coroutines.delay
 
 @Preview(showBackground = true)
@@ -81,7 +82,7 @@ fun HomeScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFF1A1A2E))
+                .background(DarkBluePurple)
         ) {
             Column(
                 modifier = Modifier
@@ -235,8 +236,8 @@ private fun SearchBar(
             .height(55.dp)
             .clip(RoundedCornerShape(12.dp)),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color(0xFF2A2A3E),
-            unfocusedContainerColor = Color(0xFF2A2A3E),
+            focusedContainerColor = DarkBluishGray,
+            unfocusedContainerColor = DarkBluishGray,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             focusedTextColor = Color.White,
@@ -265,8 +266,8 @@ private fun FeaturedMovie(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        Color(0xFF6200EE),
-                        Color(0xFF03DAC6)
+                        DarkPurple,
+                        Turquoise
                     )
                 )
             )

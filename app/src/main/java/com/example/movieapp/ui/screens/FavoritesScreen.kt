@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.components.MovieCard
+import com.example.movieapp.ui.theme.*
 
 @Preview(showBackground = true)
 @Composable
@@ -35,7 +36,7 @@ fun FavoritesScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFF1A1A2E))
+                .background(DarkBluePurple)
         ) {
             Text(
                 text = "My Favorites",
