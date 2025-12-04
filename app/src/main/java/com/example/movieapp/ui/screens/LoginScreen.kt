@@ -24,9 +24,13 @@ import androidx.compose.ui.unit.sp
 import com.example.movieapp.R
 import com.example.movieapp.ui.theme.*
 
-@Preview(showBackground = true)
+
 @Composable
-fun LoginScreen( modifier: Modifier = Modifier,onNavigateToRegister: () -> Unit = {}){
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    onNavigateToRegister: () -> Unit = {},
+    onNavigateToHome: () -> Unit
+){
     Box(
         modifier = modifier
             .fillMaxSize()
