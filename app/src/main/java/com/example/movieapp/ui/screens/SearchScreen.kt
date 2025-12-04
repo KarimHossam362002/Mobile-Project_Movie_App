@@ -31,6 +31,17 @@ import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.theme.*
 
+/**
+ * A composable that provides a search interface for movies.
+ * It includes a text field for entering a search query and displays a list of
+ * movies that match the query. The screen shows different states for when the user
+ * has not started searching, when no results are found, and when results are available.
+ *
+ * @param modifier The modifier to be applied to the SearchScreen. Defaults to [Modifier].
+ * @param allMovies A list of all [Movie] objects to be searched through. Defaults to an empty list.
+ * @param onMovieClick A lambda function that is invoked when a movie from the search results
+ *                     is clicked. It receives the movie's ID as an Int. Defaults to an empty lambda.
+ */
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,

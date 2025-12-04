@@ -37,6 +37,17 @@ val InwardWaveShape = GenericShape { size, _ ->
 }
 
 
+/**
+ * A composable function that displays the welcome screen of the application.
+ *
+ * This screen features a background image, a title "Absolute Cinema", a brief descriptive
+ * text, and a "Get Started" button. The layout uses a custom `InwardWaveShape`
+ * to create a visually appealing wavy division between the content and the background.
+ *
+ * @param modifier The modifier to be applied to the layout. Defaults to `Modifier`.
+ * @param onNavigateToLogin A lambda function that is invoked when the "Get Started" button is clicked.
+ *                          This is typically used to navigate to the login or home screen. Defaults to an empty lambda.
+ */
 @Preview(showBackground = true)
 @Composable
 fun WelcomeScreen( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = {}){
@@ -87,7 +98,7 @@ fun WelcomeScreen( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit =
 
             Button(
                 onClick = onNavigateToLogin,
-                colors = ButtonDefaults.buttonColors(containerColor = Blue),
+                colors = ButtonDefaults.buttonColors(containerColor = Cyan),
                 shape = RoundedCornerShape(10.dp), // Rounded corners for the button
                 modifier = Modifier
                     .fillMaxWidth()

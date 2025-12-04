@@ -36,6 +36,19 @@ import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.theme.*
 
 
+/**
+ * A Jetpack Compose screen that displays detailed information about a specific movie.
+ *
+ * This composable presents a rich UI including a header with a play button,
+ * back navigation, and a favorite toggle. Below the header, it shows the movie's
+ * title, rating, an overview/description, and a section for cast and crew.
+ *
+ * @param movie The [Movie] data object containing the details to be displayed.
+ * @param onBackClick A lambda function to be invoked when the user clicks the back button.
+ * @param onAddToFavorites A lambda function to be invoked when the user clicks the favorite icon.
+ * @param isFavorite A boolean indicating whether the movie is currently in the user's favorites.
+ *                   This determines the initial state of the favorite icon. Defaults to `false`.
+ */
 @Composable
 fun MovieDetailsScreen(
     movie: Movie,

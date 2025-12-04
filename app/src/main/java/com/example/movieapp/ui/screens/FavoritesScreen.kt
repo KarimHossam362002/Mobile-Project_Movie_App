@@ -25,6 +25,18 @@ import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.theme.*
 
+/**
+ * A Composable screen that displays a user's favorite movies.
+ *
+ * This screen shows a grid of `MovieCard` items representing the movies the user has
+ * marked as favorites. If the list of favorite movies is empty, it displays a
+ * placeholder message prompting the user to add favorites.
+ *
+ * @param modifier Optional [Modifier] for this composable.
+ * @param favoriteMovies A list of [Movie] objects to be displayed. Defaults to an empty list.
+ * @param onMovieClick A callback lambda that is invoked when a movie card is clicked,
+ *                     providing the `movieId` of the clicked movie.
+ */
 @Preview(showBackground = true)
 @Composable
 fun FavoritesScreen(

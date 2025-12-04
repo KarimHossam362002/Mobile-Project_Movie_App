@@ -41,6 +41,19 @@ import com.example.movieapp.ui.components.CategoryFilter
 import com.example.movieapp.ui.theme.*
 import kotlinx.coroutines.delay
 
+/**
+ * A composable function that represents the main screen of the movie application.
+ *
+ * This screen displays a search bar, category filters, a featured movie,
+ * a list of new movies, and a general list of movies. It allows users to search
+ * for movies and filter them by category. Search results are displayed in a grid,
+ * while standard browsing uses horizontal rows.
+ *
+ * @param modifier The modifier to be applied to the HomeScreen.
+ * @param movies The list of movies to be displayed on the screen. Defaults to an empty list.
+ * @param onMovieClick A lambda function that is invoked when a movie card is clicked,
+ *                     providing the ID of the clicked movie.
+ */
 @Preview(showBackground = true)
 @Composable
 fun HomeScreen(

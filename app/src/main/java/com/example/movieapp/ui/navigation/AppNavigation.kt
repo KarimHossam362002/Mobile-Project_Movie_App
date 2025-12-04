@@ -43,9 +43,14 @@ fun AppNavigation() {
         }
 
         composable(AppRoutes.LOGIN) {
-            LoginScreen {
-                navController.navigate(AppRoutes.REGISTER)
-            }
+            LoginScreen(
+                onNavigateToRegister = {
+                    navController.navigate(AppRoutes.REGISTER)
+                },
+                onNavigateToHome = {}
+            )
+
+
         }
 
         composable(AppRoutes.REGISTER) {

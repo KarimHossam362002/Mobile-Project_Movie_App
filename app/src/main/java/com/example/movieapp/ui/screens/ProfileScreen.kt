@@ -19,6 +19,17 @@ import com.example.movieapp.data.User
 import com.example.movieapp.ui.theme.*
 
 
+/**
+ * A composable function that displays the user's profile information.
+ *
+ * This screen shows the user's profile icon, username, and email address.
+ * It also includes a button to edit the profile, although the functionality
+ * is not yet implemented. The layout is centered vertically and horizontally
+ * with a dark background theme.
+ *
+ * @param currentUser The [User] object containing the data to be displayed.
+ * @param modifier The [Modifier] to be applied to the root Column layout.
+ */
 @Composable
 fun ProfileScreen(
     currentUser: User,  // Pass user data

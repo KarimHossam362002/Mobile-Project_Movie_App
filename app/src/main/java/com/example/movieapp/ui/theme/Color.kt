@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 val Darkblue = Color(0, 15, 28, 255)
 
 val Basecolor = Color(0,9,17)
+val Cyan = Color(36,177,242)
 val Blue = Color(12, 61, 96, 255)
 val White = Color(255,255,255)
 
