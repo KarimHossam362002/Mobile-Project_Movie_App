@@ -28,6 +28,18 @@ import androidx.navigation.compose.*
 import com.example.movieapp.ui.screens.*
 
 
+/**
+ * A Jetpack Compose screen for user registration.
+ *
+ * This composable function displays a form for new users to create an account. It includes
+ * input fields for full name, email, password, and password confirmation. It also features
+ * a "Sign Up" button and a link to navigate to the login screen for existing users.
+ * The UI is styled with a dark theme, including a background image and custom text field colors.
+ *
+ * @param modifier A [Modifier] to be applied to the root container of the screen.
+ * @param onNavigateToLogin A lambda function to be invoked when the "Sign In" text is clicked,
+ *                          triggering navigation to the login screen.
+ */
 @Preview(showBackground = true)
 @Composable
 fun RegisterPage( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = {}){

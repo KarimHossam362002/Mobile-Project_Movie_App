@@ -24,9 +24,28 @@ import androidx.compose.ui.unit.sp
 import com.example.movieapp.R
 import com.example.movieapp.ui.theme.*
 
-@Preview(showBackground = true)
+
+/**
+ * A composable function that displays the login screen for the application.
+ *
+ * This screen includes a background image, an app icon, welcome text,
+ * input fields for username/email and password, a "Sign in" button,
+ * and a link to navigate to the registration screen.
+ *
+ * @param modifier A [Modifier] for this composable. Defaults to [Modifier].
+ * @param onNavigateToRegister A lambda function to be invoked when the "Sign Up" text is clicked,
+ *                             triggering navigation to the registration screen.
+ * @param onNavigateToHome A lambda function to be invoked upon successful login,
+ *                         triggering navigation to the home screen. Note: The current implementation
+ *                         of the "Sign in" button's `onClick` is empty and needs to be updated
+ *                         to call this function.
+ */
 @Composable
-fun LoginScreen( modifier: Modifier = Modifier,onNavigateToRegister: () -> Unit = {}){
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    onNavigateToRegister: () -> Unit = {},
+    onNavigateToHome: () -> Unit
+){
     Box(
         modifier = modifier
             .fillMaxSize()
