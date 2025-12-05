@@ -6,6 +6,8 @@ object AppRoutes {
     const val WELCOME = "welcome_route"
     const val LOGIN = "login_route"
     const val REGISTER = "register_route"
+
+    const val LOADING = "loading_route"
 }
 
 @Composable
@@ -27,13 +29,17 @@ fun AppNavigation() {
             LoginScreen(
                 onNavigateToRegister = {
                     navController.navigate(AppRoutes.REGISTER)
-                }
+                },
+                
             )
         }
         composable(AppRoutes.REGISTER) {
             RegisterPage(onNavigateToLogin= {
                 navController.navigate(AppRoutes.LOGIN)
             })
+        }
+        composable(AppRoutes.LOADING) {
+            LoadingScreen()
         }
     }
 }

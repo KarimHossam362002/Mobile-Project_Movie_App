@@ -135,9 +135,11 @@ fun LoginScreen( modifier: Modifier = Modifier,onNavigateToRegister: () -> Unit 
             Row(
                 modifier = modifier.fillMaxWidth().padding(horizontal = 50.dp),
                 verticalAlignment = Alignment.CenterVertically
-            ){Text(text = "Don't have an account ?",fontSize = 15.sp, color = White)
-              TextButton(onClick = onNavigateToRegister,contentPadding = PaddingValues(0.dp)) {
-                  Text(text = "Sign Up", color = Color.White,fontSize = 15.sp, fontWeight = FontWeight.Bold,)  }
+            )
+            {
+                Text(text = "Don't have an account ?",fontSize = 15.sp, color = White)
+                TextButton(onClick = onNavigateToRegister,contentPadding = PaddingValues(0.dp)) {
+                    Text(text = "Sign Up", color = Color.White,fontSize = 15.sp, fontWeight = FontWeight.Bold,)  }
             }
 
         }
