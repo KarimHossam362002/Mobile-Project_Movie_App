@@ -98,7 +98,7 @@ fun WelcomeScreen( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit =
 
             Button(
                 onClick = onNavigateToLogin,
-                colors = ButtonDefaults.buttonColors(containerColor = Cyan),
+                colors = ButtonDefaults.buttonColors(containerColor = Blue),
                 shape = RoundedCornerShape(10.dp), // Rounded corners for the button
                 modifier = Modifier
                     .fillMaxWidth()

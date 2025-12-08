@@ -40,11 +40,13 @@ import com.example.movieapp.ui.theme.*
  *                         of the "Sign in" button's `onClick` is empty and needs to be updated
  *                         to call this function.
  */
+
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onNavigateToRegister: () -> Unit = {},
-    onNavigateToHome: () -> Unit
+    onNavigateToRegister: () -> Unit,
+    onNavigateToHome: () -> Unit,
+//    onNavigationToLoading: () -> Unit
 ){
     Box(
         modifier = modifier
@@ -146,18 +148,20 @@ fun LoginScreen(
                 )
             )
             Spacer(Modifier.height(150.dp))
-            Button(onClick = {}, colors = ButtonDefaults.buttonColors(
+            Button(onClick = onNavigateToHome, colors = ButtonDefaults.buttonColors(
                 containerColor = Blue,
                 contentColor = White,
             ),modifier = Modifier.width(300.dp),) {Text("Sign in")  }
 
             Row(
-                modifier = modifier.fillMaxWidth().padding(horizontal = 50.dp),
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 50.dp),
                 verticalAlignment = Alignment.CenterVertically
             )
             {
                 Text(text = "Don't have an account ?",fontSize = 15.sp, color = White)
-                TextButton(onClick = onNavigateToRegister,contentPadding = PaddingValues(0.dp)) {
+                TextButton(onClick = onNavigateToRegister ,contentPadding = PaddingValues(0.dp)) {
                     Text(text = "Sign Up", color = Color.White,fontSize = 15.sp, fontWeight = FontWeight.Bold,)  }
             }
 
