@@ -1,9 +1,12 @@
 package com.example.movieapp.ui.navigation
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.*
 import com.example.movieapp.ui.screens.*
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.movieapp.data.User
 import kotlinx.coroutines.delay
 
 object AppRoutes {
@@ -19,6 +22,7 @@ fun LoadingWrapperScreen(
     targetRoute: String,
     onLoadingComplete: (String) -> Unit
 ) {
+
     var isLoading by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
@@ -75,7 +79,6 @@ fun AppNavigation() {
         }
 
         composable(AppRoutes.HOME) {
-            // Your actual home screen content
             HomeScreen()
         }
 

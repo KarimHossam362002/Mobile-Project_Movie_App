@@ -1,4 +1,5 @@
 package com.example.movieapp.ui.screens
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,13 +17,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.movieapp.R
+import com.example.movieapp.data.MovieDatabase
 import com.example.movieapp.ui.theme.*
+import com.example.movieapp.ui.viewmodel.*
+import com.example.movieapp.utils.Hashing.hashPassword
 
 
 /**
@@ -48,6 +53,16 @@ fun LoginScreen(
     onNavigateToHome: () -> Unit,
 //    onNavigationToLoading: () -> Unit
 ){
+    val context = LocalContext.current
+    val db = MovieDatabase.getDatabase(context)
+    val viewModel: LoginViewModel = viewModel(
+        factory = LoginViewModelFactory(db.userDao())
+    )
+
+
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -88,10 +103,11 @@ fun LoginScreen(
 
             //username field
             Spacer(Modifier.height(50.dp))
-            var nameInput by remember { mutableStateOf("") }
+
             TextField(
-                value = nameInput,
-                onValueChange = { nameInput = it },
+
+                value = username,
+                onValueChange = { username = it },
                 label = { Text("Username or Email") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
@@ -111,11 +127,10 @@ fun LoginScreen(
             )
             //password field
             Spacer(Modifier.height(32.dp))
-            var passowrd by remember { mutableStateOf("") }
             var passwordVisible by remember { mutableStateOf(false) }
             TextField(
-                value = passowrd,
-                onValueChange = { passowrd = it },
+                value = password,
+                onValueChange = { password = it },
                 label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
@@ -148,10 +163,29 @@ fun LoginScreen(
                 )
             )
             Spacer(Modifier.height(150.dp))
-            Button(onClick = onNavigateToHome, colors = ButtonDefaults.buttonColors(
-                containerColor = Blue,
-                contentColor = White,
-            ),modifier = Modifier.width(300.dp),) {Text("Sign in")  }
+            Button(
+                onClick = {
+                    val trimmedUsername = username.trim()
+                    val trimmedPassword = password.trim()
+                    val hashedPassword = hashPassword(trimmedPassword)
+                    viewModel.login(
+                        username = trimmedUsername,
+                        password = hashedPassword,
+                        onSuccess = { user ->
+                            Toast.makeText(context, "Welcome ${user.username}", Toast.LENGTH_SHORT).show()
+                            onNavigateToHome() // navigate to home
+                        },
+                        onError = { message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Blue,
+                    contentColor = White,
+                ),
+                modifier = Modifier.width(300.dp),
+            ) {Text("Sign in")  }
 
             Row(
                 modifier = modifier

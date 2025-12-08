@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
+import com.example.movieapp.data.User
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.components.CategoryFilter
 import com.example.movieapp.ui.theme.*
@@ -54,12 +55,14 @@ import kotlinx.coroutines.delay
  * @param onMovieClick A lambda function that is invoked when a movie card is clicked,
  *                     providing the ID of the clicked movie.
  */
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     movies: List<Movie> = emptyList(),
-    onMovieClick: (Int) -> Unit = {}
+    onMovieClick: (Int) -> Unit = {},
+
+
 ) {
     val categories = listOf("All", "Adventure", "Comedy", "Fantasy")
     var selectedCategory by remember { mutableStateOf("All") }
@@ -67,7 +70,7 @@ fun HomeScreen(
     val focusManager = LocalFocusManager.current
     var isSearching by remember { mutableStateOf(false) }
     var debouncedQuery by remember { mutableStateOf("") }
-
+//    Text("Welcome, ${user.username}!", fontSize = 24.sp) // Viewing user name
 
     LaunchedEffect(searchQuery) {
         if (searchQuery.isNotEmpty()) {
