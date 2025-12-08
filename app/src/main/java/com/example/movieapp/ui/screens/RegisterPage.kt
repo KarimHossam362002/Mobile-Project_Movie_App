@@ -1,4 +1,5 @@
 package com.example.movieapp.ui.screens
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,16 +17,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.movieapp.R
 import com.example.movieapp.ui.navigation.AppRoutes
 import com.example.movieapp.ui.theme.*
 import androidx.navigation.compose.*
+import com.example.movieapp.data.MovieDatabase
+import com.example.movieapp.data.User
 import com.example.movieapp.ui.screens.*
+import com.example.movieapp.ui.viewmodel.RegisterViewModel
+import com.example.movieapp.ui.viewmodel.RegisterViewModelFactory
 
 
 /**
@@ -40,9 +49,19 @@ import com.example.movieapp.ui.screens.*
  * @param onNavigateToLogin A lambda function to be invoked when the "Sign In" text is clicked,
  *                          triggering navigation to the login screen.
  */
-@Preview(showBackground = true)
+
+//@Preview(showBackground = true)
 @Composable
 fun RegisterPage( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = {}){
+    val context = LocalContext.current
+
+    val database = MovieDatabase.getDatabase(context)
+    val userDao = database.userDao()
+
+    val registerViewModel: RegisterViewModel = viewModel(
+        factory = RegisterViewModelFactory(userDao)
+    )
+
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -124,11 +143,11 @@ fun RegisterPage( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = 
 
             //password field
             Spacer(Modifier.height(25.dp))
-            var passowrd by remember { mutableStateOf("") }
+            var password by remember { mutableStateOf("") }
             var passwordVisible by remember { mutableStateOf(false) }
             TextField(
-                value = passowrd,
-                onValueChange = { passowrd = it },
+                value = password,
+                onValueChange = { password = it },
                 label = { Text("Password") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
@@ -200,7 +219,26 @@ fun RegisterPage( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = 
             )
             //sign up button
             Spacer(Modifier.height(150.dp))
-            Button(onClick = {}, colors = ButtonDefaults.buttonColors(
+            Button(onClick = {
+                Log.d("ROOM_DEBUG", "Register button clicked")
+                registerViewModel.registerUser(
+                    username = nameInput,
+                    email = emailinput,
+                    password = password,
+                    confirmPassword = confirmpassword,
+
+                    onSuccess = {
+                        Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
+                        onNavigateToLogin()
+                    },
+
+                    onError = { message ->
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    }
+
+                )
+                Log.d("ROOM_DEBUG", "User inserted successfully outscope")
+            }, colors = ButtonDefaults.buttonColors(
                 containerColor = Blue,
                 contentColor = White,
             ),modifier = Modifier.width(300.dp),) {Text("Sign Up")  }
