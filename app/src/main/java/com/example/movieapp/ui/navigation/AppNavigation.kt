@@ -1,4 +1,5 @@
 package com.example.movieapp.ui.navigation
+
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.*
 import com.example.movieapp.ui.screens.*
@@ -10,31 +11,37 @@ object AppRoutes {
     const val LOGIN = "login_route"
     const val REGISTER = "register_route"
     const val HOME = "home_route"
-
+    const val LOADING = "loading_route"
 }
-
-
 
 @Composable
 fun LoadingWrapperScreen(
-    onLoadingComplete: () -> Unit
+    targetRoute: String,
+    onLoadingComplete: (String) -> Unit
 ) {
-    // 1. Define the loading state
     var isLoading by remember { mutableStateOf(true) }
 
-    // 2. Start the data loading effect
     LaunchedEffect(Unit) {
-        delay(1000)
+        delay(500) // 1 second loading
         isLoading = false
-        onLoadingComplete()
+        onLoadingComplete(targetRoute)
     }
+
     if (isLoading) {
         LoadingScreen()
     }
 }
+
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
+    var pendingRoute by remember { mutableStateOf<String?>(null) }
+
+    // Helper function to navigate with loading
+    fun navigateWithLoading(route: String) {
+        pendingRoute = route
+        navController.navigate(AppRoutes.LOADING)
+    }
 
     NavHost(
         navController = navController,
@@ -43,36 +50,53 @@ fun AppNavigation() {
         composable(AppRoutes.WELCOME) {
             WelcomeScreen(
                 onNavigateToLogin = {
-                    navController.navigate(AppRoutes.LOGIN)
+                    navigateWithLoading(AppRoutes.LOGIN)
                 }
             )
         }
+
         composable(AppRoutes.LOGIN) {
             LoginScreen(
                 onNavigateToRegister = {
-                    navController.navigate(AppRoutes.REGISTER)
+                    navigateWithLoading(AppRoutes.REGISTER)
                 },
-                // When navigating home, we go straight to the Home route
                 onNavigateToHome = {
-                    navController.navigate(AppRoutes.HOME)
+                    navigateWithLoading(AppRoutes.HOME)
                 }
             )
         }
+
         composable(AppRoutes.REGISTER) {
-            RegisterPage(onNavigateToLogin= {
-                navController.navigate(AppRoutes.LOGIN)
-            })
+            RegisterPage(
+                onNavigateToLogin = {
+                    navigateWithLoading(AppRoutes.LOGIN)
+                }
+            )
         }
+
         composable(AppRoutes.HOME) {
-            LoadingWrapperScreen {
-                navController.navigate("home_content_route")
-            }
-        }
-        composable("home_content_route") {
+            // Your actual home screen content
             HomeScreen()
         }
-//        composable(AppRoutes.LOADING){
-//            LoadingScreen()
-//        }
+
+        composable(AppRoutes.LOADING) {
+            pendingRoute?.let { route ->
+                LoadingWrapperScreen(
+                    targetRoute = route,
+                    onLoadingComplete = { target ->
+                        navController.navigate(target) {
+                            popUpTo(AppRoutes.LOADING) {
+                                inclusive = true
+                            }
+                        }
+                        pendingRoute = null
+                    }
+                )
+            }
+        }
     }
 }
+
+// Note: Make sure you have a HomeContentScreen or HomeScreen composable
+// in your com.example.movieapp.ui.screens package
+// If you don't have one yet, create it or replace with your actual home screen
