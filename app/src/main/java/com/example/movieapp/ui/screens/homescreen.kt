@@ -1,4 +1,7 @@
 package com.example.movieapp.ui.screens
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
+import com.example.movieapp.data.Movie
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,11 +17,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,38 +31,46 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.movieapp.data.Movie
-import com.example.movieapp.data.User
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.components.CategoryFilter
 import com.example.movieapp.ui.theme.*
 import kotlinx.coroutines.delay
-
-/**
- * A composable function that represents the main screen of the movie application.
- *
- * This screen displays a search bar, category filters, a featured movie,
- * a list of new movies, and a general list of movies. It allows users to search
- * for movies and filter them by category. Search results are displayed in a grid,
- * while standard browsing uses horizontal rows.
- *
- * @param modifier The modifier to be applied to the HomeScreen.
- * @param movies The list of movies to be displayed on the screen. Defaults to an empty list.
- * @param onMovieClick A lambda function that is invoked when a movie card is clicked,
- *                     providing the ID of the clicked movie.
- */
-//@Preview(showBackground = true)
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
-    movies: List<Movie> = emptyList(),
-    onMovieClick: (Int) -> Unit = {},
+
+movies: List<Movie> = emptyList(),
+onMovieClick: (Int) -> Unit = {}
+) {
 
 
+    var selectedTab by remember { mutableStateOf(NavigationTab.HOME) }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+
+        Box(modifier = Modifier.weight(1f)) {
+            when (selectedTab) {
+                NavigationTab.HOME -> HomeContent(movies, onMovieClick)
+                NavigationTab.SEARCH -> SearchContent(movies, onMovieClick)
+                NavigationTab.FAVORITES -> FavoritesContent(movies, onMovieClick)
+                NavigationTab.PROFILE -> ProfileContent()
+            }
+        }
+
+        BottomNavigationBar(
+            selectedTab = selectedTab,
+            onTabSelected = { selectedTab = it }
+        )
+    }
+}
+
+
+@Composable
+fun HomeContent(
+    movies: List<Movie>,
+    onMovieClick: (Int) -> Unit
 ) {
     val categories = listOf("All", "Adventure", "Comedy", "Fantasy")
     var selectedCategory by remember { mutableStateOf("All") }
@@ -70,7 +78,6 @@ fun HomeScreen(
     val focusManager = LocalFocusManager.current
     var isSearching by remember { mutableStateOf(false) }
     var debouncedQuery by remember { mutableStateOf("") }
-//    Text("Welcome, ${user.username}!", fontSize = 24.sp) // Viewing user name
 
     LaunchedEffect(searchQuery) {
         if (searchQuery.isNotEmpty()) {
@@ -84,19 +91,22 @@ fun HomeScreen(
 
     val filteredMovies = remember(searchQuery, selectedCategory, movies) {
         movies.filter { movie ->
-            val matchesSearch = searchQuery.isEmpty() || movie.title.contains(searchQuery, ignoreCase = true)
+            val matchesSearch = searchQuery.isEmpty() ||
+                    movie.title.contains(searchQuery, ignoreCase = true)
+
             val matchesCategory = selectedCategory == "All" ||
-                    (selectedCategory == "Adventure" && movie.title.contains("Adventure", ignoreCase = true)) ||
-                    (selectedCategory == "Comedy" && movie.title.contains("Comedy", ignoreCase = true)) ||
-                    (selectedCategory == "Fantasy" && movie.title.contains("Fantasy", ignoreCase = true))
+                    (selectedCategory == "Adventure" && movie.title.contains("Adventure", true)) ||
+                    (selectedCategory == "Comedy" && movie.title.contains("Comedy", true)) ||
+                    (selectedCategory == "Fantasy" && movie.title.contains("Fantasy", true))
+
             matchesSearch && matchesCategory
         }
     }
 
-
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .background(DarkBluePurple)
         ) {
@@ -107,13 +117,11 @@ fun HomeScreen(
                     .verticalScroll(rememberScrollState())
                     .padding(bottom = 16.dp)
             ) {
-
                 SearchBar(
                     query = searchQuery,
                     onQueryChange = { newQuery ->
                         searchQuery = newQuery
                         if (newQuery.isEmpty()) {
-
                             isSearching = false
                             debouncedQuery = ""
                         }
@@ -127,8 +135,8 @@ fun HomeScreen(
                     },
                     modifier = Modifier.padding(16.dp)
                 )
-                Spacer(modifier = Modifier.height(16.dp))
 
+                Spacer(modifier = Modifier.height(16.dp))
 
                 CategoryFilter(
                     categories = categories,
@@ -138,8 +146,8 @@ fun HomeScreen(
                     },
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
-                Spacer(modifier = Modifier.height(20.dp))
 
+                Spacer(modifier = Modifier.height(20.dp))
 
                 if (filteredMovies.isNotEmpty()) {
                     FeaturedMovie(
@@ -147,19 +155,20 @@ fun HomeScreen(
                         onClick = { onMovieClick(filteredMovies.first().movieId) }
                     )
                 }
-                Spacer(modifier = Modifier.height(24.dp))
 
+                Spacer(modifier = Modifier.height(24.dp))
 
                 SectionTitle("New")
                 NewMoviesRow(
                     movies = filteredMovies.take(3),
                     onMovieClick = onMovieClick
                 )
-                Spacer(modifier = Modifier.height(15.dp))
 
+                Spacer(modifier = Modifier.height(15.dp))
 
                 if (isSearching && filteredMovies.isNotEmpty()) {
                     SectionTitle("Search Results for '$searchQuery'")
+
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(2),
                         modifier = Modifier
@@ -177,14 +186,13 @@ fun HomeScreen(
                         }
                     }
                 } else if (!isSearching || filteredMovies.isEmpty()) {
-
                     SectionTitle("Movies")
+
                     NewMoviesRow(
                         movies = filteredMovies,
                         onMovieClick = onMovieClick
                     )
                 }
-
 
                 if (isSearching && filteredMovies.isEmpty()) {
                     Box(
@@ -206,8 +214,10 @@ fun HomeScreen(
     }
 }
 
+
+
 @Composable
-private fun SearchBar(
+fun SearchBar(
     query: String,
     onQueryChange: (String) -> Unit,
     onSearch: () -> Unit,
@@ -360,3 +370,25 @@ private fun NewMoviesRow(
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
