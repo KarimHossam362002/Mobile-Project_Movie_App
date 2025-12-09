@@ -262,8 +262,8 @@ fun SearchBar(
             .height(55.dp)
             .clip(RoundedCornerShape(12.dp)),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = DarkBluishGray,
-            unfocusedContainerColor = DarkBluishGray,
+            focusedContainerColor = Darkblue,
+            unfocusedContainerColor = Darkblue,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             focusedTextColor = Color.White,
@@ -292,7 +292,7 @@ private fun FeaturedMovie(
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        DarkPurple,
+                        Basecolor,
                         Turquoise
                     )
                 )

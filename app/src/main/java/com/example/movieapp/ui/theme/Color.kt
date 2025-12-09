@@ -7,7 +7,7 @@ val Basecolor = Color(0,9,17)
 val Cyan = Color(36,177,242)
 val Blue = Color(12, 61, 96, 255)
 val White = Color(255,255,255)
-
+val red = Color(105, 2, 2, 255)
 val Black = Color(0,0,0)
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)

@@ -49,7 +49,7 @@ private fun CategoryButton(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(
-                if (isSelected) Color.White else DarkBluishGray
+                if (isSelected) Color.White else Darkblue
             )
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 8.dp),

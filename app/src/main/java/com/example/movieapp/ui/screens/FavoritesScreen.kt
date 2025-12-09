@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.components.MovieCard
-import com.example.movieapp.ui.theme.DarkBluePurple
+import com.example.movieapp.ui.theme.*
 
 @Composable
 fun FavoritesContent(
@@ -26,13 +26,13 @@ fun FavoritesContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBluePurple)
+            .background(Basecolor)
     ) {
+
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
-                ,contentAlignment = Alignment.Center
+                .padding(30.dp)
         ) {
             Text(
                 text = "My Favorites",

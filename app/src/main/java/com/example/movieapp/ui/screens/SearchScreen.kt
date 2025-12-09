@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.components.MovieCard
-import com.example.movieapp.ui.theme.DarkBluePurple
+import com.example.movieapp.ui.theme.*
 
 @Composable
 fun SearchContent(
@@ -31,12 +31,12 @@ fun SearchContent(
     val searchResults = remember(searchQuery, movies) {
         if (searchQuery.isEmpty()) emptyList()
         else movies.filter { it.title.contains(searchQuery, ignoreCase = true) }
-    }
+     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(DarkBluePurple)
+            .background(Basecolor)
             .padding(16.dp)
     ) {
         SearchBar(
@@ -52,7 +52,7 @@ fun SearchContent(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "لا توجد نتائج",
+                    text = "No results found",
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
