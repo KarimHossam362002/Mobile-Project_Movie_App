@@ -6,6 +6,7 @@ import androidx.navigation.compose.*
 import com.example.movieapp.ui.screens.*
 import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.movieapp.data.Movie
 import com.example.movieapp.data.User
 import kotlinx.coroutines.delay
 
@@ -80,6 +81,7 @@ fun AppNavigation() {
 
         composable(AppRoutes.HOME) {
             HomeScreen()
+
         }
 
         composable(AppRoutes.LOADING) {
