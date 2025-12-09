@@ -61,7 +61,7 @@ fun MovieDetailsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(DarkBluePurple)
+                .background(Basecolor)
                 .verticalScroll(rememberScrollState())
         ) {
 

@@ -48,7 +48,7 @@ fun FavoritesScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(DarkBluePurple)
+                .background(Basecolor)
         ) {
             Text(
                 text = "My Favorites",

@@ -59,7 +59,7 @@ fun SearchScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(DarkBluePurple)
+                .background(Basecolor)
         ) {
             BasicTextField(
                 value = searchQuery,

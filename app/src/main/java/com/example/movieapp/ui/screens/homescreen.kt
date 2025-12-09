@@ -98,7 +98,7 @@ fun HomeScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(DarkBluePurple)
+                .background(Basecolor)
         ) {
             Column(
                 modifier = Modifier
