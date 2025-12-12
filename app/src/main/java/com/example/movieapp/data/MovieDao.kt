@@ -1,7 +1,6 @@
 package com.example.movieapp.data
 
 import androidx.room.*
-import com.google.firebase.Firebase
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,4 +20,3 @@ interface MovieDao {
     @Query("SELECT * FROM movies WHERE movie_id = :movieId")
     suspend fun getMovieById(movieId: Int): Movie?
 }
-
