@@ -1,6 +1,6 @@
 package com.example.movieapp.data.firebase
 
-data class Movie(
+data class MovieFB(
     val id: Int,
     val title: String,
     val originalTitle: String,

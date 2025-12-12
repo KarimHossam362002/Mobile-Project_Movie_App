@@ -5,19 +5,19 @@ import androidx.lifecycle.ViewModel
 import com.example.movieapp.data.firebase.MovieRepository
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
-import com.example.movieapp.data.firebase.Movie
+import com.example.movieapp.data.firebase.MovieFB
 
 class HomeViewModel : ViewModel() {
 
     private val repository = MovieRepository()
 
-    var movies by mutableStateOf<List<Movie>>(emptyList())
+    var movies by mutableStateOf<List<MovieFB>>(emptyList())
         private set
 
     var currentPage by mutableStateOf(1)
     private val pageSize = 10
 
-    val pagedMovies: List<Movie>
+    val pagedMovies: List<MovieFB>
         get() {
             val start = (currentPage - 1) * pageSize
             val end = (start + pageSize).coerceAtMost(movies.size)

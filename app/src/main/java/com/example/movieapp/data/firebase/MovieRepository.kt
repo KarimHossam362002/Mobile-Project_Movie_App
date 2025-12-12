@@ -7,11 +7,11 @@ class MovieRepository {
 
     private val db = Firebase.database.reference.child("movies")
 
-    fun getMovies(onResult: (List<Movie>) -> Unit) {
+    fun getMovies(onResult: (List<MovieFB>) -> Unit) {
         db.get().addOnSuccessListener { snapshot ->
-            val list = mutableListOf<Movie>()
+            val list = mutableListOf<MovieFB>()
             snapshot.children.forEach { child ->
-                val movie = child.getValue(Movie::class.java)
+                val movie = child.getValue(MovieFB::class.java)
                 if (movie != null) list.add(movie)
             }
             onResult(list)
