@@ -5,7 +5,7 @@ import com.google.firebase.database.database
 
 class MovieRepository {
 
-    private val db = Firebase.database.reference
+    private val db = Firebase.database.reference.child("movies")
 
     fun getMovies(onResult: (List<Movie>) -> Unit) {
         db.get().addOnSuccessListener { snapshot ->
