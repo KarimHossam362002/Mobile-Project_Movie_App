@@ -34,7 +34,6 @@ import com.example.movieapp.data.MovieDatabase
 import com.example.movieapp.data.User
 import com.example.movieapp.ui.screens.*
 import com.example.movieapp.ui.viewmodel.RegisterViewModel
-import com.example.movieapp.ui.viewmodel.RegisterViewModelFactory
 
 
 /**
@@ -55,12 +54,11 @@ import com.example.movieapp.ui.viewmodel.RegisterViewModelFactory
 fun RegisterPage( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = {}){
     val context = LocalContext.current
 
-    val database = MovieDatabase.getDatabase(context)
-    val userDao = database.userDao()
+//    val database = MovieDatabase.getDatabase(context)
+//    val userDao = database.userDao()
 
-    val registerViewModel: RegisterViewModel = viewModel(
-        factory = RegisterViewModelFactory(userDao)
-    )
+    val registerViewModel: RegisterViewModel = viewModel()
+
 
     Box(
         modifier = modifier
@@ -219,29 +217,30 @@ fun RegisterPage( modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = 
             )
             //sign up button
             Spacer(Modifier.height(150.dp))
-            Button(onClick = {
-                Log.d("ROOM_DEBUG", "Register button clicked")
-                registerViewModel.registerUser(
-                    username = nameInput,
-                    email = emailinput,
-                    password = password,
-                    confirmPassword = confirmpassword,
-
-                    onSuccess = {
-                        Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
-                        onNavigateToLogin()
-                    },
-
-                    onError = { message ->
-                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                    }
-
-                )
-                Log.d("ROOM_DEBUG", "User inserted successfully outscope")
-            }, colors = ButtonDefaults.buttonColors(
-                containerColor = Blue,
-                contentColor = White,
-            ),modifier = Modifier.width(300.dp),) {Text("Sign Up")  }
+            Button(
+                onClick = {
+                    registerViewModel.registerUser(
+                        username = nameInput,
+                        email = emailinput,
+                        password = password,
+                        confirmPassword = confirmpassword,
+                        onSuccess = {
+                            Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
+                            onNavigateToLogin()
+                        },
+                        onError = { message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Blue,
+                    contentColor = White
+                ),
+                modifier = Modifier.width(300.dp)
+            ) {
+                Text("Sign Up")
+            }
 
             //sign in text
             Row(

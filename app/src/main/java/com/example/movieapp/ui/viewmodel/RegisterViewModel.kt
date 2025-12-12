@@ -1,11 +1,13 @@
 package com.example.movieapp.ui.viewmodel
 
-import androidx.lifecycle.*
-import com.example.movieapp.data.*
-import com.example.movieapp.utils.*
-import kotlinx.coroutines.launch
+import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
-class RegisterViewModel(private val userDao: UserDao) : ViewModel() {
+class RegisterViewModel : ViewModel() {
+
+    private val auth = FirebaseAuth.getInstance()
+    private val database = FirebaseDatabase.getInstance().reference.child("users")
 
     fun registerUser(
         username: String,
@@ -15,18 +17,8 @@ class RegisterViewModel(private val userDao: UserDao) : ViewModel() {
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        if (username.isBlank() || email.isBlank() || password.isBlank()) {
+        if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
             onError("All fields are required")
-            return
-        }
-
-        if (!Validation.isValidEmail(email)) {
-            onError("Invalid email format")
-            return
-        }
-
-        if (!Validation.isValidPassword(password)) {
-            onError("Password must be at least 6 characters")
             return
         }
 
@@ -35,18 +27,22 @@ class RegisterViewModel(private val userDao: UserDao) : ViewModel() {
             return
         }
 
-        val hashedPassword = Hashing.hashPassword(password)
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener { result ->
+                val uid = result.user?.uid ?: return@addOnSuccessListener onError("Registration failed")
 
-        val user = User(
-            username = username,
-            email = email,
-            password = hashedPassword
-        )
+                val userData = mapOf(
+                    "username" to username,
+                    "email" to email
+                )
 
-        viewModelScope.launch {
-            userDao.insertUser(user)
-            onSuccess()
-        }
+                database.child(uid)
+                    .setValue(userData)
+                    .addOnSuccessListener { onSuccess() }
+                    .addOnFailureListener { e -> onError(e.message ?: "Database error") }
+            }
+            .addOnFailureListener { e ->
+                onError(e.message ?: "Authentication error")
+            }
     }
 }
-

@@ -54,11 +54,12 @@ fun LoginScreen(
 //    onNavigationToLoading: () -> Unit
 ){
     val context = LocalContext.current
-    val db = MovieDatabase.getDatabase(context)
-    val viewModel: LoginViewModel = viewModel(
-        factory = LoginViewModelFactory(db.userDao())
-    )
+//    val db = MovieDatabase.getDatabase(context)
+//    val viewModel: LoginViewModel = viewModel(
+//        factory = LoginViewModelFactory(db.userDao())
+//    )
 
+    val viewModel: LoginViewModel = viewModel()
 
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -108,7 +109,7 @@ fun LoginScreen(
 
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Username or Email") },
+                label = { Text("Username") },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
                 colors = TextFieldDefaults.colors(
@@ -165,27 +166,30 @@ fun LoginScreen(
             Spacer(Modifier.height(150.dp))
             Button(
                 onClick = {
-                    val trimmedUsername = username.trim()
-                    val trimmedPassword = password.trim()
-                    val hashedPassword = hashPassword(trimmedPassword)
+
+
+                    // Use your LoginViewModel login function
                     viewModel.login(
-                        username = trimmedUsername,
-                        password = hashedPassword,
-                        onSuccess = { user ->
-                            Toast.makeText(context, "Welcome ${user.username}", Toast.LENGTH_SHORT).show()
-                            onNavigateToHome() // navigate to home
-                        },
-                        onError = { message ->
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                        username = username,
+                        password = password
+                    ) { success, errorMessage ->
+                        if (success) {
+                            Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show()
+                            onNavigateToHome()
+                        } else {
+                            Toast.makeText(context, errorMessage ?: "Login failed", Toast.LENGTH_SHORT).show()
                         }
-                    )
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Blue,
                     contentColor = White,
                 ),
                 modifier = Modifier.width(300.dp),
-            ) {Text("Sign in")  }
+            ) {
+                Text("Sign in")
+            }
+
 
             Row(
                 modifier = modifier

@@ -1,33 +1,55 @@
 package com.example.movieapp.ui.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.movieapp.data.*
-import kotlinx.coroutines.launch
+import com.example.movieapp.data.firebase.UserFB
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
-class LoginViewModel(private val userDao: UserDao) : ViewModel() {
+class LoginViewModel : ViewModel() {
+
+    private val auth = FirebaseAuth.getInstance()
+    private val database = FirebaseDatabase.getInstance().reference
 
     fun login(
         username: String,
         password: String,
-        onSuccess: (User) -> Unit,
-        onError: (String) -> Unit
+        onResult: (Boolean, String?) -> Unit
     ) {
-        viewModelScope.launch {
-            try {
-                val user = userDao.login(username, password)
-                Log.d("LoginViewModel", "User: ${user?.username}")
-                if (user != null) {
-                    onSuccess(user)
-                } else {
-                    Log.d("LoginViewModel", "Invalid username or password")
-                    onError("Invalid username or password")
-                }
-            } catch (e: Exception) {
-                onError("Login failed: ${e.message}")
-            }
+        database.child("users")
+            .get()
+            .addOnSuccessListener { snapshot ->
 
-        }
+                var matchedEmail: String? = null
+
+                for (userSnapshot in snapshot.children) {
+                    val dbUsername =
+                        userSnapshot.child("username").getValue(String::class.java)
+
+                    if (dbUsername == username) {
+                        matchedEmail =
+                            userSnapshot.child("email").getValue(String::class.java)
+                        break
+                    }
+                }
+
+                if (matchedEmail == null) {
+                    onResult(false, "Username not found")
+                    return@addOnSuccessListener
+                }
+
+                auth.signInWithEmailAndPassword(matchedEmail, password)
+                    .addOnSuccessListener {
+                        onResult(true, null)
+                    }
+                    .addOnFailureListener { e ->
+                        onResult(false, e.message)
+                    }
+            }
+            .addOnFailureListener { e ->
+                onResult(false, e.message)
+            }
     }
 }
+
+
+

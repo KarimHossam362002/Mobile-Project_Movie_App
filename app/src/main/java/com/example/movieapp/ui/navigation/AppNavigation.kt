@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.movieapp.data.Movie
 import com.example.movieapp.data.User
+import com.example.movieapp.ui.viewmodel.SessionViewModel
 import kotlinx.coroutines.delay
 
 object AppRoutes {
@@ -38,7 +39,8 @@ fun LoadingWrapperScreen(
 }
 
 @Composable
-fun AppNavigation() {
+fun AppNavigation(sessionViewModel: SessionViewModel = viewModel()) {
+    val isLoggedIn by sessionViewModel.isLoggedIn.collectAsState()
     val navController = rememberNavController()
     var pendingRoute by remember { mutableStateOf<String?>(null) }
 
@@ -50,7 +52,7 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = AppRoutes.WELCOME
+        startDestination =if (isLoggedIn) AppRoutes.HOME else AppRoutes.WELCOME
     ) {
         composable(AppRoutes.WELCOME) {
             WelcomeScreen(
@@ -83,6 +85,7 @@ fun AppNavigation() {
             HomeScreen()
 
         }
+
 
         composable(AppRoutes.LOADING) {
             pendingRoute?.let { route ->

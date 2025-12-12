@@ -16,11 +16,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.example.movieapp.data.firebase.UserFB
+import com.example.movieapp.data.firebase.UserHelpers.getCurrentUserEmail
+import com.example.movieapp.data.firebase.UserHelpers.getCurrentUsername
 import com.example.movieapp.ui.theme.*
+import com.example.movieapp.ui.viewmodel.AuthViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @Preview(showBackground = true)
 @Composable
-fun ProfileContent(modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = {}) {
+fun ProfileContent(modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit = {},authViewModel: AuthViewModel = viewModel()) {
+    val viewModel: AuthViewModel = viewModel()
+    val user by authViewModel.user.collectAsState()
+    LaunchedEffect(Unit) {
+        authViewModel.loadCurrentUser()
+    }
+
+    val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,13 +83,13 @@ fun ProfileContent(modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit =
                 Column {
                     Spacer(Modifier.height(15.dp))
                     Text(
-                    text = "My Name",
+                        text = user?.username ?: "User",
                     fontSize = 28.sp,
                     color = Color.White
                     )
                     Spacer(Modifier.height(10.dp))
                     Text(
-                        text = "My Email",
+                        text = user?.email ?: "Email",
                         fontSize = 18.sp,
                         color = Color.White
                     )
@@ -104,7 +120,11 @@ fun ProfileContent(modifier: Modifier = Modifier,onNavigateToLogin: () -> Unit =
                 }
                 Spacer(Modifier.height(30.dp))
                 Button(
-                onClick = onNavigateToLogin,
+                    onClick = {
+
+                        viewModel.logout()
+//                        onNavigateToLogin()
+                    },
                 colors = ButtonDefaults.buttonColors(containerColor = red),
                 shape = RoundedCornerShape(10.dp), // Rounded corners for the button
                 modifier = Modifier

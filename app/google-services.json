@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1033475051666",
+    "firebase_url": "https://movieapp-b1cb2-default-rtdb.firebaseio.com",
     "project_id": "movieapp-b1cb2",
     "storage_bucket": "movieapp-b1cb2.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.example.movieapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1033475051666-9pdbjtq009er16bfv0go4p258vchqi0r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.movieapp",
+            "certificate_hash": "fd793ddf6585b1d67a83cddf78a8aed27a86b239"
+          }
+        },
+        {
+          "client_id": "1033475051666-8unonqs5366phbtpuhp0inf06040j49j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBAL6dctf3VWBSrYFT4KP7ox505pc3ElLY"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033475051666-8unonqs5366phbtpuhp0inf06040j49j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
