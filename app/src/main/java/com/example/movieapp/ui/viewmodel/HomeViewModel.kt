@@ -2,42 +2,39 @@ package com.example.movieapp.ui.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.movieapp.data.Movie
 import com.example.movieapp.data.firebase.MovieRepository
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import com.example.movieapp.data.firebase.MovieFB
+import androidx.compose.runtime.State
 
 class HomeViewModel : ViewModel() {
 
     private val repository = MovieRepository()
 
-    var movies by mutableStateOf<List<MovieFB>>(emptyList())
-        private set
+    private val _movies = mutableStateOf<List<Movie>>(emptyList())
+    val movies: State<List<Movie>> = _movies
 
-    var currentPage by mutableStateOf(1)
-    private val pageSize = 10
+    private val _isLoading = mutableStateOf(false)
+    val isLoading: State<Boolean> = _isLoading
 
-    val pagedMovies: List<MovieFB>
-        get() {
-            val start = (currentPage - 1) * pageSize
-            val end = (start + pageSize).coerceAtMost(movies.size)
-            return if (start < end) movies.subList(start, end) else emptyList()
-        }
+    init {
+        loadMovies()
+    }
 
     fun loadMovies() {
-        repository.getMovies { list ->
-            movies = list.sortedBy { it.id }
+        _isLoading.value = true
+        repository.getMovies { movieFBList ->
+            // Convert MovieFB to Movie
+            _movies.value = movieFBList.map { movieFB ->
+                Movie(
+                    movieId = movieFB.id,
+                    title = movieFB.title,
+                    description = movieFB.storyline,
+                    releaseDate = movieFB.releaseDate,
+                    posterUrl = movieFB.poster ?: movieFB.posterurl,
+                    rating = movieFB.averageRating
+                )
+            }
+            _isLoading.value = false
         }
     }
-
-    fun nextPage() {
-        if (currentPage * pageSize < movies.size) currentPage++
-    }
-
-    fun prevPage() {
-        if (currentPage > 1) currentPage--
-    }
-
-    val totalPages: Int
-        get() = (movies.size + pageSize - 1) / pageSize
 }

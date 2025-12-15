@@ -37,22 +37,24 @@ import androidx.compose.ui.unit.sp
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.components.CategoryFilter
 import com.example.movieapp.ui.theme.*
+import com.example.movieapp.ui.viewmodel.HomeViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
+
 @Composable
 fun HomeScreen(
-
-movies: List<Movie> = emptyList(),
-onMovieClick: (Int) -> Unit = {}
+    viewModel: HomeViewModel = viewModel(),
+    onMovieClick: (Int) -> Unit = {}
 ) {
-
+    val movies by viewModel.movies
+    val isLoading by viewModel.isLoading
 
     var selectedTab by remember { mutableStateOf(NavigationTab.HOME) }
 
     Column(modifier = Modifier.fillMaxSize()) {
-
         Box(modifier = Modifier.weight(1f)) {
             when (selectedTab) {
-                NavigationTab.HOME -> HomeContent(movies, onMovieClick)
+                NavigationTab.HOME -> HomeContent(movies, isLoading, onMovieClick)
                 NavigationTab.SEARCH -> SearchContent(movies, onMovieClick)
                 NavigationTab.FAVORITES -> FavoritesContent(movies, onMovieClick)
                 NavigationTab.PROFILE -> ProfileContent()
@@ -70,6 +72,7 @@ onMovieClick: (Int) -> Unit = {}
 @Composable
 fun HomeContent(
     movies: List<Movie>,
+    isLoading: Boolean = false,
     onMovieClick: (Int) -> Unit
 ) {
     val categories = listOf("All", "Adventure", "Comedy", "Fantasy")
@@ -149,7 +152,16 @@ fun HomeContent(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                if (filteredMovies.isNotEmpty()) {
+                if (isLoading && movies.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(color = Turquoise)
+                    }
+                } else if (filteredMovies.isNotEmpty()) {
                     FeaturedMovie(
                         movie = filteredMovies.first(),
                         onClick = { onMovieClick(filteredMovies.first().movieId) }
