@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie/auth/welcome.dart';
 import 'bloc/product_bloc.dart';
 import 'controlloer/product_controller.dart';
 import 'view/product_screen.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
       create: (_) => MovieBloc(controller),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: MovieScreen(),
+        home: WelcomeScreen(),
       ),
     );
   }

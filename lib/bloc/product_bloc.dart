@@ -1,7 +1,10 @@
+
 import 'package:bloc/bloc.dart';
-import 'package:movie/bloc/product_event.dart';
-import 'package:movie/bloc/product_state.dart';
-import 'package:movie/controlloer/product_controller.dart';
+
+import '../controlloer/product_controller.dart';
+import 'product_event.dart';
+import 'product_state.dart';
+
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final MovieController controller;

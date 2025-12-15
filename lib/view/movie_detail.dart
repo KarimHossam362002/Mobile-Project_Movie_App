@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie/model/product.dart';
+import '../model/product.dart';
+import 'product_screen.dart'; 
 
 class MovieDetail extends StatelessWidget {
   final Movie movie;
@@ -9,113 +10,155 @@ class MovieDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text("Movie Detail"),
-        centerTitle: true,
+        backgroundColor: Colors.black,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          'Movie',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Poster with Gradient
-            Stack(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: 320,
-                  child: movie.poster.isNotEmpty
-                      ? Image.network(
-                          movie.poster,
-                          fit: BoxFit.cover,
-                          errorBuilder: (_, __, ___) {
-                            return Container(
-                              color: Colors.grey[300],
-                              child: const Center(
-                                child: Icon(Icons.movie, size: 80),
-                              ),
-                            );
-                          },
-                        )
-                      : Container(
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Icon(Icons.movie, size: 80),
-                          ),
-                        ),
-                ),
 
-                // Gradient Overlay
-                Container(
-                  height: 320,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [Colors.black54, Colors.transparent],
-                    ),
-                  ),
+            Container(
+              width: double.infinity,
+              height: 360,
+              decoration: BoxDecoration(
+                border: BoxBorder.all(color: Colors.white),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(45),
+                  bottomRight: Radius.circular(45),
+                ),
+                color: Colors.white,
+              ),
+              clipBehavior: Clip.antiAlias, 
+              child: movie.poster.isNotEmpty
+                  ? Image.network(
+                      movie.poster,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) {
+                        return _fallbackImage();
+                      },
+                    )
+                  : _fallbackImage(),
+            ),
+
+            const SizedBox(height: 20),
+
+            Row(
+              children: [
+                const SizedBox(width: 16),
+                const Text(
+                  "Film Name:",
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  movie.title,
+                  style: const TextStyle(fontSize: 20, color: Colors.white70),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+        
+            Row(
+              children: [
+                const SizedBox(width: 16),
+                const Text(
+                  "Year: ",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  movie.year,
+                  style: const TextStyle(fontSize: 16, color: Colors.white70),
                 ),
               ],
             ),
 
             const SizedBox(height: 16),
 
-            // Info Card
+           
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title
-                      Text(
-                        movie.title,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Year Chip
-                      Chip(
-                        avatar: const Icon(Icons.calendar_today, size: 18),
-                        label: Text(
-                          movie.year,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Fake description (اختياري)
-                      Text(
-                        "This movie is one of the most popular titles of its year. "
-                        "It gained wide recognition and attracted a large audience.",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[700],
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    "Description",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
+                  SizedBox(height: 8),
+                  Text(
+                    "A popular movie that gained wide recognition and attracted a large audience worldwide.",
+                    style: TextStyle(fontSize: 15, color: Colors.white60, height: 1.4),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
+
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  if (!favorites.contains(movie)) {
+                    favorites.add(movie);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("${movie.title} added to favorites!",style: TextStyle(color: Colors.black),),
+                        backgroundColor: Colors.white,
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("${movie.title} is already in favorites!",style: TextStyle(color: Colors.white)),
+                        backgroundColor: Colors.grey[800],
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                },
+                icon: const Icon(Icons.favorite, color: Colors.red),
+                label: const Text("Add to Favorites", style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  shadowColor: Colors.white,
+                  backgroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                 ),
               ),
             ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
           ],
         ),
       ),
     );
   }
+}
+
+
+Widget _fallbackImage() {
+  return Container(
+    width: double.infinity,
+    color: Colors.black26,
+    child: Center(
+      child: Image.asset(
+        '.dart_tool/Images/hqdefault.jpg',
+         fit: BoxFit.cover,
+        opacity: const AlwaysStoppedAnimation(0.7),
+      ),
+    ),
+  );
 }

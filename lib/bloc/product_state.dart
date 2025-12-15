@@ -1,4 +1,7 @@
-import 'package:movie/model/product.dart';
+
+
+
+import '../model/product.dart';
 
 abstract class MovieState {}
 
@@ -15,3 +18,4 @@ class MovieError extends MovieState {
   final String message;
   MovieError(this.message);
 }
+
