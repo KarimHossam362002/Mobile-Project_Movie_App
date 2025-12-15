@@ -23,16 +23,21 @@ class HomeViewModel : ViewModel() {
     fun loadMovies() {
         _isLoading.value = true
         repository.getMovies { movieFBList ->
-            // Convert MovieFB to Movie
-            _movies.value = movieFBList.map { movieFB ->
-                Movie(
-                    movieId = movieFB.id,
-                    title = movieFB.title,
-                    description = movieFB.storyline,
-                    releaseDate = movieFB.releaseDate,
-                    posterUrl = movieFB.poster ?: movieFB.posterurl,
-                    rating = movieFB.averageRating
-                )
+            try {
+                // Convert MovieFB to Movie (Firebase callbacks run on main thread)
+                _movies.value = movieFBList.map { movieFB ->
+                    Movie(
+                        movieId = movieFB.id,
+                        title = movieFB.title,
+                        description = movieFB.storyline,
+                        releaseDate = movieFB.releaseDate,
+                        posterUrl = movieFB.poster ?: movieFB.posterurl,
+                        rating = movieFB.averageRating
+                    )
+                }
+            } catch (e: Exception) {
+                // If conversion fails, just use empty list
+                _movies.value = emptyList()
             }
             _isLoading.value = false
         }
