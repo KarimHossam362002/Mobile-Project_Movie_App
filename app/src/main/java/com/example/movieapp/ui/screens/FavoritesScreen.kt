@@ -13,15 +13,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.data.Movie
+import com.example.movieapp.data.firebase.MovieFB
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.theme.*
 
 @Composable
 fun FavoritesContent(
-    movies: List<Movie>,
+    movies: List<MovieFB>,
     onMovieClick: (Int) -> Unit
 ) {
-    var favoriteMovies by remember { mutableStateOf(listOf<Movie>()) }
+    var favoriteMovies by remember { mutableStateOf(listOf<MovieFB>()) }
 
     Column(
         modifier = Modifier
@@ -64,7 +65,7 @@ fun FavoritesContent(
                 items(favoriteMovies) { movie ->
                     MovieCard(
                         movie = movie,
-                        onClick = { onMovieClick(movie.movieId) }
+                        onClick = { onMovieClick(movie.id) }
                     )
                 }
             }

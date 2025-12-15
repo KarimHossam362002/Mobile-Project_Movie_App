@@ -4,42 +4,37 @@ import androidx.compose.runtime.*
 import com.example.movieapp.data.Movie
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.movieapp.ui.components.MovieCard
-import com.example.movieapp.ui.components.CategoryFilter
 import com.example.movieapp.ui.theme.*
 import com.example.movieapp.ui.viewmodel.HomeViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
-import kotlinx.coroutines.delay
+import coil.compose.AsyncImage
+import com.example.movieapp.data.firebase.MovieFB
 
 @Composable
 fun HomeScreen(
@@ -54,7 +49,9 @@ fun HomeScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.weight(1f)) {
             when (selectedTab) {
-                NavigationTab.HOME -> HomeContent(movies, isLoading, onMovieClick)
+                NavigationTab.HOME -> HomeContent(movies, isLoading,
+                    onMovieClick as (MovieFB) -> Unit
+                )
                 NavigationTab.SEARCH -> SearchContent(movies, onMovieClick)
                 NavigationTab.FAVORITES -> FavoritesContent(movies, onMovieClick)
                 NavigationTab.PROFILE -> ProfileContent()
@@ -71,157 +68,106 @@ fun HomeScreen(
 
 @Composable
 fun HomeContent(
-    movies: List<Movie>,
+    movies: List<MovieFB>,
     isLoading: Boolean = false,
-    onMovieClick: (Int) -> Unit
+    onMovieClick: (MovieFB) -> Unit
 ) {
-    val categories = listOf("All", "Adventure", "Comedy", "Fantasy")
-    var selectedCategory by remember { mutableStateOf("All") }
-    var searchQuery by remember { mutableStateOf("") }
-    val focusManager = LocalFocusManager.current
-    var isSearching by remember { mutableStateOf(false) }
-    var debouncedQuery by remember { mutableStateOf("") }
-
-    LaunchedEffect(searchQuery) {
-        if (searchQuery.isNotEmpty()) {
-            delay(300)
-            if (searchQuery == debouncedQuery) {
-                debouncedQuery = searchQuery
-                isSearching = true
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Basecolor)
+    ) {
+        when {
+            isLoading -> {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = Turquoise
+                )
             }
-        }
-    }
 
-    val filteredMovies = remember(searchQuery, selectedCategory, movies) {
-        movies.filter { movie ->
-            val matchesSearch = searchQuery.isEmpty() ||
-                    movie.title.contains(searchQuery, ignoreCase = true)
-
-            val matchesCategory = selectedCategory == "All" ||
-                    (selectedCategory == "Adventure" && movie.title.contains("Adventure", true)) ||
-                    (selectedCategory == "Comedy" && movie.title.contains("Comedy", true)) ||
-                    (selectedCategory == "Fantasy" && movie.title.contains("Fantasy", true))
-
-            matchesSearch && matchesCategory
-        }
-    }
-
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Basecolor)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .verticalScroll(rememberScrollState())
-                    .padding(bottom = 16.dp)
-            ) {
-                SearchBar(
-                    query = searchQuery,
-                    onQueryChange = { newQuery ->
-                        searchQuery = newQuery
-                        if (newQuery.isEmpty()) {
-                            isSearching = false
-                            debouncedQuery = ""
-                        }
-                    },
-                    onSearch = {
-                        focusManager.clearFocus()
-                        if (searchQuery.isNotEmpty()) {
-                            debouncedQuery = searchQuery
-                            isSearching = true
-                        }
-                    },
-                    modifier = Modifier.padding(16.dp)
+            movies.isEmpty() -> {
+                Text(
+                    text = "No movies available",
+                    color = Color.Gray,
+                    modifier = Modifier.align(Alignment.Center)
                 )
+            }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CategoryFilter(
-                    categories = categories,
-                    selectedCategory = selectedCategory,
-                    onCategorySelected = {
-                        if (!isSearching) selectedCategory = it
-                    },
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                if (isLoading && movies.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(32.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator(color = Turquoise)
-                    }
-                } else if (filteredMovies.isNotEmpty()) {
-                    FeaturedMovie(
-                        movie = filteredMovies.first(),
-                        onClick = { onMovieClick(filteredMovies.first().movieId) }
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                SectionTitle("New")
-                NewMoviesRow(
-                    movies = filteredMovies.take(3),
-                    onMovieClick = onMovieClick
-                )
-
-                Spacer(modifier = Modifier.height(15.dp))
-
-                if (isSearching && filteredMovies.isNotEmpty()) {
-                    SectionTitle("Search Results for '$searchQuery'")
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                        contentPadding = PaddingValues(bottom = 16.dp)
-                    ) {
-                        items(filteredMovies) { movie ->
-                            MovieCard(
-                                movie = movie,
-                                onClick = { onMovieClick(movie.movieId) }
-                            )
-                        }
-                    }
-                } else if (!isSearching || filteredMovies.isEmpty()) {
-                    SectionTitle("Movies")
-
-                    NewMoviesRow(
-                        movies = filteredMovies,
-                        onMovieClick = onMovieClick
-                    )
-                }
-
-                if (isSearching && filteredMovies.isEmpty()) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "No movies found for '$searchQuery'",
-                            fontSize = 16.sp,
-                            color = Color.Gray,
-                            fontWeight = FontWeight.Medium
+            else -> {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(3),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(movies, key = { it.id }) { movie ->
+                        MovieGridItem(
+                            movie = movie,
+                            onClick = { onMovieClick(movie) }
                         )
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun MovieGridItem(
+    movie: MovieFB,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .clickable { onClick() }
+            .fillMaxWidth()
+    ) {
+
+        // Poster
+        AsyncImage(
+            model = movie.posterurl,
+            contentDescription = movie.title,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .height(170.dp)
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(DarkPurple)
+        )
+
+        Spacer(modifier = Modifier.height(6.dp))
+
+        // Title
+        Text(
+            text = movie.title,
+            color = Color.White,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+
+        Spacer(modifier = Modifier.height(4.dp))
+
+        // Rating
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = "Rating",
+                tint = Color.Yellow,
+                modifier = Modifier.size(14.dp)
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            Text(
+                text = movie.averageRating.toString(),
+                color = Color.White,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
@@ -362,26 +308,26 @@ private fun SectionTitle(title: String) {
     }
 }
 
-@Composable
-private fun NewMoviesRow(
-    movies: List<Movie>,
-    onMovieClick: (Int) -> Unit
-) {
-    LazyRow(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-        contentPadding = PaddingValues(vertical = 8.dp)
-    ) {
-        items(movies) { movie ->
-            MovieCard(
-                movie = movie,
-                onClick = { onMovieClick(movie.movieId) }
-            )
-        }
-    }
-}
+//@Composable
+//private fun NewMoviesRow(
+//    movies: List<Movie>,
+//    onMovieClick: (Int) -> Unit
+//) {
+//    LazyRow(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(horizontal = 16.dp),
+//        horizontalArrangement = Arrangement.spacedBy(12.dp),
+//        contentPadding = PaddingValues(vertical = 8.dp)
+//    ) {
+//        items(movies) { movie ->
+//            MovieCard(
+//                movie = movie,
+//                onClick = { onMovieClick(movie.movieId) }
+//            )
+//        }
+//    }
+//}
 
 
 

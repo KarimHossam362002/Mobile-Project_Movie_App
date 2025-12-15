@@ -17,14 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.movieapp.data.Movie
+import com.example.movieapp.data.firebase.MovieFB
 import com.example.movieapp.ui.theme.DarkPurple
 import com.example.movieapp.ui.theme.Turquoise
 
 
 @Composable
 fun MovieCard(
-    movie: Movie,
+    movie: MovieFB,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -69,7 +69,7 @@ fun MovieCard(
                 color = Color.Gray
             )
             Spacer(modifier = Modifier.width(8.dp))
-            if (movie.rating != null) {
+            if (movie.averageRating != null) {
                 Icon(
                     imageVector = Icons.Filled.Star,
                     contentDescription = "Rating",
@@ -78,7 +78,7 @@ fun MovieCard(
                 )
                 Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = movie.rating.toString(),
+                    text = movie.averageRating.toString(),
                     fontSize = 10.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold

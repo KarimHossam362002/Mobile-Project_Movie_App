@@ -5,13 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.example.movieapp.data.Movie
 import com.example.movieapp.data.firebase.MovieRepository
 import androidx.compose.runtime.State
+import com.example.movieapp.data.firebase.MovieFB
 
 class HomeViewModel : ViewModel() {
 
     private val repository = MovieRepository()
 
-    private val _movies = mutableStateOf<List<Movie>>(emptyList())
-    val movies: State<List<Movie>> = _movies
+    private val _movies = mutableStateOf<List<MovieFB>>(emptyList())
+    val movies: State<List<MovieFB>> = _movies
 
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
@@ -26,13 +27,22 @@ class HomeViewModel : ViewModel() {
             try {
                 // Convert MovieFB to Movie (Firebase callbacks run on main thread)
                 _movies.value = movieFBList.map { movieFB ->
-                    Movie(
-                        movieId = movieFB.id,
+                    MovieFB(
+                        id = movieFB.id,
                         title = movieFB.title,
-                        description = movieFB.storyline,
+                        storyline = movieFB.storyline,
                         releaseDate = movieFB.releaseDate,
-                        posterUrl = movieFB.poster ?: movieFB.posterurl,
-                        rating = movieFB.averageRating
+                        posterurl = movieFB.poster ?: movieFB.posterurl,
+                        genres = movieFB.genres,
+                        actors = movieFB.actors,
+                        imdbRating = movieFB.imdbRating,
+                        duration = movieFB.duration,
+                        ratings = movieFB.ratings,
+                        contentRating = movieFB.contentRating,
+                        originalTitle = movieFB.originalTitle,
+                        year = movieFB.year,
+                        poster = movieFB.poster,
+                        averageRating = movieFB.averageRating
                     )
                 }
             } catch (e: Exception) {

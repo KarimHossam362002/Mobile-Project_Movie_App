@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,13 +13,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.movieapp.data.Movie
+import com.example.movieapp.data.firebase.MovieFB
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.theme.*
 
 @Composable
 fun SearchContent(
-    movies: List<Movie>,
+    movies: List<MovieFB>,
     onMovieClick: (Int) -> Unit
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -67,7 +64,7 @@ fun SearchContent(
                 items(searchResults) { movie ->
                     MovieCard(
                         movie = movie,
-                        onClick = { onMovieClick(movie.movieId) }
+                        onClick = { onMovieClick(movie.id) }
                     )
                 }
             }
