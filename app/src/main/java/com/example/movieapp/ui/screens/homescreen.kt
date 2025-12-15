@@ -161,6 +161,20 @@ fun HomeContent(
                     ) {
                         CircularProgressIndicator(color = Turquoise)
                     }
+                } else if (!isLoading && movies.isEmpty()) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No movies available",
+                            fontSize = 16.sp,
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 } else if (filteredMovies.isNotEmpty()) {
                     FeaturedMovie(
                         movie = filteredMovies.first(),

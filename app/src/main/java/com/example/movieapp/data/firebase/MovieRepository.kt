@@ -1,5 +1,6 @@
 package com.example.movieapp.data.firebase
 
+import android.util.Log
 import com.google.firebase.database.FirebaseDatabase
 
 class MovieRepository {
@@ -10,18 +11,28 @@ class MovieRepository {
         db.get().addOnSuccessListener { snapshot ->
             val list = mutableListOf<MovieFB>()
             if (snapshot.exists()) {
+                Log.d("MovieRepository", "Snapshot exists, children count: ${snapshot.childrenCount}")
                 snapshot.children.forEach { child ->
                     try {
                         val movie = child.getValue(MovieFB::class.java)
-                        if (movie != null) list.add(movie)
+                        if (movie != null) {
+                            list.add(movie)
+                            Log.d("MovieRepository", "Loaded movie: ${movie.title}")
+                        } else {
+                            Log.w("MovieRepository", "Movie is null for child: ${child.key}")
+                        }
                     } catch (e: Exception) {
-                        // Skip movies that can't be deserialized
+                        Log.e("MovieRepository", "Error deserializing movie: ${e.message}", e)
                     }
                 }
+            } else {
+                Log.w("MovieRepository", "Snapshot does not exist at 'movies' path")
             }
+            Log.d("MovieRepository", "Total movies loaded: ${list.size}")
             onResult(list)
-        }.addOnFailureListener {
-            onResult(emptyList()) // in case of error
+        }.addOnFailureListener { error ->
+            Log.e("MovieRepository", "Failed to load movies: ${error.message}", error)
+            onResult(emptyList())
         }
     }
 }

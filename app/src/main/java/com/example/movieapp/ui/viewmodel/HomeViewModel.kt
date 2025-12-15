@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.movieapp.data.Movie
@@ -22,7 +23,9 @@ class HomeViewModel : ViewModel() {
 
     fun loadMovies() {
         _isLoading.value = true
+        Log.d("HomeViewModel", "Starting to load movies...")
         repository.getMovies { movieFBList ->
+            Log.d("HomeViewModel", "Received ${movieFBList.size} movies from Firebase")
             try {
                 // Convert MovieFB to Movie (Firebase callbacks run on main thread)
                 _movies.value = movieFBList.map { movieFB ->
@@ -35,8 +38,9 @@ class HomeViewModel : ViewModel() {
                         rating = movieFB.averageRating
                     )
                 }
+                Log.d("HomeViewModel", "Converted to ${_movies.value.size} Movie objects")
             } catch (e: Exception) {
-                // If conversion fails, just use empty list
+                Log.e("HomeViewModel", "Error converting movies: ${e.message}", e)
                 _movies.value = emptyList()
             }
             _isLoading.value = false
