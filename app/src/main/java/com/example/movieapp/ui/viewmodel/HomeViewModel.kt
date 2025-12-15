@@ -1,21 +1,23 @@
 package com.example.movieapp.ui.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.movieapp.data.Movie
-import com.example.movieapp.data.firebase.MovieRepository
-import androidx.compose.runtime.State
+import androidx.lifecycle.viewModelScope
 import com.example.movieapp.data.firebase.MovieFB
+import com.example.movieapp.data.firebase.MovieRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
     private val repository = MovieRepository()
 
-    private val _movies = mutableStateOf<List<MovieFB>>(emptyList())
-    val movies: State<List<MovieFB>> = _movies
+    private val _movies = MutableStateFlow<List<MovieFB>>(emptyList())
+    val movies: StateFlow<List<MovieFB>> = _movies.asStateFlow()
 
-    private val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
         loadMovies()
@@ -25,31 +27,21 @@ class HomeViewModel : ViewModel() {
         _isLoading.value = true
         repository.getMovies { movieFBList ->
             try {
-                // Convert MovieFB to Movie (Firebase callbacks run on main thread)
-                _movies.value = movieFBList.map { movieFB ->
-                    MovieFB(
-                        id = movieFB.id,
-                        title = movieFB.title,
-                        storyline = movieFB.storyline,
-                        releaseDate = movieFB.releaseDate,
-                        posterurl = movieFB.poster ?: movieFB.posterurl,
-                        genres = movieFB.genres,
-                        actors = movieFB.actors,
-                        imdbRating = movieFB.imdbRating,
-                        duration = movieFB.duration,
-                        ratings = movieFB.ratings,
-                        contentRating = movieFB.contentRating,
-                        originalTitle = movieFB.originalTitle,
-                        year = movieFB.year,
-                        poster = movieFB.poster,
-                        averageRating = movieFB.averageRating
-                    )
-                }
+                // استخدم MovieFB مباشرة بدون تحويل، ورتب حسب الـ title
+                _movies.value = movieFBList
+                    .sortedBy { it.title }
+                    .map { movieFB ->
+                        // لو عايز تعديل بسيط، زي fallback للـ poster
+                        movieFB.copy(
+                            posterurl = movieFB.posterurl ?: movieFB.poster ?: ""
+                        )
+                    }
             } catch (e: Exception) {
-                // If conversion fails, just use empty list
+                // لو في error في التحويل، استخدم empty list
                 _movies.value = emptyList()
+            } finally {
+                _isLoading.value = false
             }
-            _isLoading.value = false
         }
     }
 }

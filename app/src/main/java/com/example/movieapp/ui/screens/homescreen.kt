@@ -1,14 +1,12 @@
 package com.example.movieapp.ui.screens
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
-import com.example.movieapp.data.Movie
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -34,22 +32,29 @@ import com.example.movieapp.ui.viewmodel.HomeViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.movieapp.data.firebase.MovieFB
+import androidx.compose.runtime.collectAsState // أضفت ده للـ StateFlow
+
+// enum للـ tabs (ضيفيه لو مش موجود)
+enum class NavigationTab { HOME, SEARCH, FAVORITES, PROFILE }
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onMovieClick: (Int) -> Unit = {}
 ) {
-    val movies by viewModel.movies
-    val isLoading by viewModel.isLoading
+    // استخدم collectAsState للـ StateFlow
+    val movies by viewModel.movies.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     var selectedTab by remember { mutableStateOf(NavigationTab.HOME) }
 
     Column(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.weight(1f)) {
             when (selectedTab) {
-                NavigationTab.HOME -> HomeContent(movies, isLoading,
-                    onMovieClick as (MovieFB) -> Unit
+                NavigationTab.HOME -> HomeContent(
+                    movies = movies,
+                    isLoading = isLoading,
+                    onMovieClick = { movie -> onMovieClick(movie.id) } // صلحت الـ lambda هنا
                 )
                 NavigationTab.SEARCH -> SearchContent(movies, onMovieClick)
                 NavigationTab.FAVORITES -> FavoritesContent(movies, onMovieClick)
@@ -63,7 +68,6 @@ fun HomeScreen(
         )
     }
 }
-
 
 @Composable
 fun HomeContent(
@@ -126,7 +130,7 @@ fun MovieGridItem(
 
         // Poster
         AsyncImage(
-            model = movie.posterurl,
+            model = movie.posterurl ?: movie.poster ?: "", // استخدم posterurl أو poster لو null
             contentDescription = movie.title,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -170,8 +174,6 @@ fun MovieGridItem(
         }
     }
 }
-
-
 
 @Composable
 fun SearchBar(
@@ -236,7 +238,7 @@ fun SearchBar(
 
 @Composable
 private fun FeaturedMovie(
-    movie: Movie,
+    movie: MovieFB, // غيرت لـ MovieFB
     onClick: () -> Unit
 ) {
     Box(
@@ -306,46 +308,4 @@ private fun SectionTitle(title: String) {
         )
     }
 }
-
-//@Composable
-//private fun NewMoviesRow(
-//    movies: List<Movie>,
-//    onMovieClick: (Int) -> Unit
-//) {
-//    LazyRow(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(horizontal = 16.dp),
-//        horizontalArrangement = Arrangement.spacedBy(12.dp),
-//        contentPadding = PaddingValues(vertical = 8.dp)
-//    ) {
-//        items(movies) { movie ->
-//            MovieCard(
-//                movie = movie,
-//                onClick = { onMovieClick(movie.movieId) }
-//            )
-//        }
-//    }
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
