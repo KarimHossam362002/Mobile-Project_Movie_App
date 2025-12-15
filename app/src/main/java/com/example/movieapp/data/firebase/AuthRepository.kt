@@ -26,5 +26,6 @@ class AuthRepository(
             .addOnCompleteListener {
                 onResult(it.isSuccessful)
             }
+
     }
 }
