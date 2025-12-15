@@ -1,5 +1,6 @@
 package com.example.movieapp.data.firebase
 
+import MovieFB
 import com.google.firebase.database.FirebaseDatabase
 
 class MovieRepository {

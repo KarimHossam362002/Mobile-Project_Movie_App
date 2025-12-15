@@ -1,11 +1,11 @@
 package com.example.movieapp.ui.viewmodel
 
+import MovieFB
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.movieapp.data.Movie
 import com.example.movieapp.data.firebase.MovieRepository
 import androidx.compose.runtime.State
-import com.example.movieapp.data.firebase.MovieFB
 
 class HomeViewModel : ViewModel() {
 
@@ -17,6 +17,9 @@ class HomeViewModel : ViewModel() {
     private val _isLoading = mutableStateOf(false)
     val isLoading: State<Boolean> = _isLoading
 
+    private val _favorites = mutableStateOf<List<MovieFB>>(emptyList())
+    val favorites: State<List<MovieFB>> = _favorites
+
     init {
         loadMovies()
     }
@@ -24,32 +27,20 @@ class HomeViewModel : ViewModel() {
     fun loadMovies() {
         _isLoading.value = true
         repository.getMovies { movieFBList ->
-            try {
-                // Convert MovieFB to Movie (Firebase callbacks run on main thread)
-                _movies.value = movieFBList.map { movieFB ->
-                    MovieFB(
-                        id = movieFB.id,
-                        title = movieFB.title,
-                        storyline = movieFB.storyline,
-                        releaseDate = movieFB.releaseDate,
-                        posterurl = movieFB.poster ?: movieFB.posterurl,
-                        genres = movieFB.genres,
-                        actors = movieFB.actors,
-                        imdbRating = movieFB.imdbRating,
-                        duration = movieFB.duration,
-                        ratings = movieFB.ratings,
-                        contentRating = movieFB.contentRating,
-                        originalTitle = movieFB.originalTitle,
-                        year = movieFB.year,
-                        poster = movieFB.poster,
-                        averageRating = movieFB.averageRating
-                    )
-                }
-            } catch (e: Exception) {
-                // If conversion fails, just use empty list
-                _movies.value = emptyList()
-            }
+            _movies.value = movieFBList
             _isLoading.value = false
         }
+    }
+
+    fun toggleFavorite(movie: MovieFB) {
+        val currentFavs = _favorites.value.toMutableList()
+        if (currentFavs.any { it.id == movie.id }) {
+            currentFavs.removeAll { it.id == movie.id }
+            movie.isFavorite = false
+        } else {
+            currentFavs.add(movie)
+            movie.isFavorite = true
+        }
+        _favorites.value = currentFavs
     }
 }
