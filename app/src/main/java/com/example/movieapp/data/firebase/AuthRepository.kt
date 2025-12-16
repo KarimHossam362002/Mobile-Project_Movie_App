@@ -12,20 +12,7 @@ class AuthRepository(
         onResult: (Boolean) -> Unit
     ) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                onResult(it.isSuccessful)
-            }
-    }
-
-    fun register(
-        email: String,
-        password: String,
-        onResult: (Boolean) -> Unit
-    ) {
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                onResult(it.isSuccessful)
-            }
-
+            .addOnSuccessListener { onResult(true) }
+            .addOnFailureListener { onResult(false) }
     }
 }

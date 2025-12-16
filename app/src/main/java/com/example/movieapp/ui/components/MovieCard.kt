@@ -1,6 +1,8 @@
 package com.example.movieapp.ui.components
 
 import MovieFB
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -35,12 +38,15 @@ fun MovieCard(
     onFavoriteClick: (MovieFB) -> Unit,
     modifier: Modifier = Modifier
 ) {
+//    Toast.makeText(LocalContext.current, "movie.title", Toast.LENGTH_SHORT).show()
     val isFav = movie.isFavorite
 
     Column(
         modifier = modifier
             .width(140.dp)
-            .clickable { onClick() }
+            .clickable {
+                onClick()
+            }
     ) {
         Box(
             modifier = Modifier
@@ -49,7 +55,7 @@ fun MovieCard(
                 .clip(RoundedCornerShape(12.dp))
         ) {
             AsyncImage(
-                model = movie.posterurl ?: "https://via.placeholder.com/150",
+                model = movie.posterurl ?: "https://placehold.net/400x600.png",
                 contentDescription = movie.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()

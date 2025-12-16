@@ -1,5 +1,7 @@
 package com.example.movieapp.ui.screens
 import MovieFB
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import com.example.movieapp.data.Movie
@@ -24,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -129,7 +132,10 @@ fun HomeContent(
                 items(filteredMovies, key = { it.id ?: "" }) { movie ->
                     MovieCard(
                         movie = movie,
-                        onClick = { onMovieClick(movie) },
+                        onClick = {
+                            Log.d("MovieCard", "Movie clicked: ${movie.title}")
+                            onMovieClick(movie)
+                        },
                         onFavoriteClick = { favMovie ->
                             viewModel.toggleFavorite(favMovie)
                         }

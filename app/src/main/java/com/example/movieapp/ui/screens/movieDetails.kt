@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.screens
 
+import MovieFB
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -26,12 +27,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.movieapp.data.Movie
 import com.example.movieapp.ui.theme.*
 
@@ -51,7 +54,7 @@ import com.example.movieapp.ui.theme.*
  */
 @Composable
 fun MovieDetailsScreen(
-    movie: Movie,
+    movie: MovieFB,
     onBackClick: () -> Unit,
     onAddToFavorites: () -> Unit,
     isFavorite: Boolean = false) {
@@ -79,6 +82,12 @@ fun MovieDetailsScreen(
                         )
                     )
             ) {
+                AsyncImage(
+                    model = movie.posterurl ?: "https://placehold.net/400x600.png",
+                    contentDescription = movie.title,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
 
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,
@@ -166,7 +175,7 @@ fun MovieDetailsScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "${movie.rating ?: 0.0}/10",
+                        text = "${movie.averageRating}/10",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -225,7 +234,7 @@ fun MovieDetailsScreen(
 
 
                 Text(
-                    text = movie.description ?: "No overview available.",
+                    text = movie.storyline ?: "No overview available.",
                     fontSize = 14.sp,
                     color = Color.Gray,
                     lineHeight = 20.sp
@@ -233,112 +242,112 @@ fun MovieDetailsScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text(
-                    text = "Cast & Crew",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-
-                val emptyCast = emptyList<Pair<String, String>>()
-                if (emptyCast.isNotEmpty()) {
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        items(emptyCast) { (name, role) ->
-                            CastItem(name = name, role = role)
-                        }
-                    }
-                } else {
-                    Text(
-                        text = "No cast information available.",
-                        fontSize = 14.sp,
-                        color = Color.Gray
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
+//                Text(
+//                    text = "Cast & Crew",
+//                    fontSize = 18.sp,
+//                    fontWeight = FontWeight.Bold,
+//                    color = Color.White
+//                )
+//
+//                Spacer(modifier = Modifier.height(12.dp))
+//
+//
+//                val emptyCast = emptyList<Pair<String, String>>()
+//                if (emptyCast.isNotEmpty()) {
+//                    LazyColumn(
+//                        verticalArrangement = Arrangement.spacedBy(8.dp)
+//                    ) {
+//                        items(emptyCast) { (name, role) ->
+//                            CastItem(name = name, role = role)
+//                        }
+//                    }
+//                } else {
+//                    Text(
+//                        text = "No cast information available.",
+//                        fontSize = 14.sp,
+//                        color = Color.Gray
+//                    )
+//                }
+//
+//                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }
 }
 
-@Composable
-private fun InfoChip(label: String, icon: ImageVector) {
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(DarkBluishGray)
-            .padding(horizontal = 12.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            tint = DarkPurple,
-            modifier = Modifier.size(14.dp)
-        )
-        Text(
-            text = label,
-            fontSize = 12.sp,
-            color = Color.White,
-            fontWeight = FontWeight.Medium
-        )
-    }
-}
+//@Composable
+//private fun InfoChip(label: String, icon: ImageVector) {
+//    Row(
+//        modifier = Modifier
+//            .clip(RoundedCornerShape(8.dp))
+//            .background(DarkBluishGray)
+//            .padding(horizontal = 12.dp, vertical = 6.dp),
+//        verticalAlignment = Alignment.CenterVertically,
+//        horizontalArrangement = Arrangement.spacedBy(6.dp)
+//    ) {
+//        Icon(
+//            imageVector = icon,
+//            contentDescription = label,
+//            tint = DarkPurple,
+//            modifier = Modifier.size(14.dp)
+//        )
+//        Text(
+//            text = label,
+//            fontSize = 12.sp,
+//            color = Color.White,
+//            fontWeight = FontWeight.Medium
+//        )
+//    }
+//}
 
-@Composable
-private fun CastItem(name: String, role: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .background(DarkBluishGray)
-            .padding(12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(50.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(
-                    Brush.horizontalGradient(
-                        colors = listOf(
-                            DarkPurple,
-                            Turquoise
-                        )
-                    )
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = name.first().toString(),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-        }
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Column {
-            Text(
-                text = name,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Text(
-                text = role,
-                fontSize = 12.sp,
-                color = Color.Gray
-            )
-        }
-    }
-
-    Spacer(modifier = Modifier.height(8.dp))
-}
+//@Composable
+//private fun CastItem(name: String, role: String) {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .clip(RoundedCornerShape(8.dp))
+//            .background(DarkBluishGray)
+//            .padding(12.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Box(
+//            modifier = Modifier
+//                .size(50.dp)
+//                .clip(RoundedCornerShape(8.dp))
+//                .background(
+//                    Brush.horizontalGradient(
+//                        colors = listOf(
+//                            DarkPurple,
+//                            Turquoise
+//                        )
+//                    )
+//                ),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Text(
+//                text = name.first().toString(),
+//                fontSize = 18.sp,
+//                fontWeight = FontWeight.Bold,
+//                color = Color.White
+//            )
+//        }
+//
+//        Spacer(modifier = Modifier.width(12.dp))
+//
+//        Column {
+//            Text(
+//                text = name,
+//                fontSize = 14.sp,
+//                fontWeight = FontWeight.Bold,
+//                color = Color.White
+//            )
+//            Text(
+//                text = role,
+//                fontSize = 12.sp,
+//                color = Color.Gray
+//            )
+//        }
+//    }
+//
+//    Spacer(modifier = Modifier.height(8.dp))
+//}
