@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.screens
 
+import MovieFB
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -13,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.movieapp.data.firebase.MovieFB
+
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.theme.*
 
@@ -64,7 +65,11 @@ fun SearchContent(
                 items(searchResults) { movie ->
                     MovieCard(
                         movie = movie,
-                        onClick = { onMovieClick(movie.id) }
+                         onClick = {
+                            movie.id?.toIntOrNull()?.let { onMovieClick(it) }
+
+                        },
+                        onFavoriteClick = {}
                     )
                 }
             }

@@ -1,4 +1,5 @@
 package com.example.movieapp.ui.screens
+import MovieFB
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import com.example.movieapp.data.Movie
@@ -33,7 +34,8 @@ import com.example.movieapp.ui.theme.*
 import com.example.movieapp.ui.viewmodel.HomeViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import com.example.movieapp.data.firebase.MovieFB
+import com.example.movieapp.ui.components.MovieCard
+
 
 @Composable
 fun HomeScreen(
@@ -48,14 +50,21 @@ fun HomeScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         Box(modifier = Modifier.weight(1f)) {
             when (selectedTab) {
-                NavigationTab.HOME -> HomeContent(movies, isLoading,
-                    onMovieClick as (MovieFB) -> Unit
+                NavigationTab.HOME -> HomeContent(
+                    movies = movies,
+                    isLoading = isLoading,
+                    viewModel = viewModel,  // <--- تمرير الـ ViewModel
+                    onMovieClick = { movie ->
+                        onMovieClick(movie.id?.toInt() ?: 0)
+                    }
                 )
                 NavigationTab.SEARCH -> SearchContent(movies, onMovieClick)
-                NavigationTab.FAVORITES -> FavoritesContent(movies, onMovieClick)
+                NavigationTab.FAVORITES -> FavoritesContent(viewModel = viewModel, onMovieClick = onMovieClick)
+
                 NavigationTab.PROFILE -> ProfileContent()
             }
         }
+
 
         BottomNavigationBar(
             selectedTab = selectedTab,
@@ -63,114 +72,73 @@ fun HomeScreen(
         )
     }
 }
-
-
 @Composable
 fun HomeContent(
     movies: List<MovieFB>,
     isLoading: Boolean = false,
+    viewModel: HomeViewModel,
     onMovieClick: (MovieFB) -> Unit
 ) {
-    Box(
+    var searchQuery by remember { mutableStateOf("") }
+
+    val filteredMovies = if (searchQuery.isEmpty()) {
+        movies
+    } else {
+        movies.filter { it.title.contains(searchQuery, ignoreCase = true) }
+    }
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Basecolor)
+            .background(Color.Black)
+            .padding(12.dp)
     ) {
-        when {
-            isLoading -> {
+        Spacer(modifier = Modifier.height(25.dp))
+
+        SearchBar(
+            query = searchQuery,
+            onQueryChange = { searchQuery = it },
+            onSearch = {  },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center),
                     color = Turquoise
                 )
             }
-
-            movies.isEmpty() -> {
+        } else if (filteredMovies.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 Text(
                     text = "No movies available",
                     color = Color.Gray,
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
-
-            else -> {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(3),
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    items(movies, key = { it.id }) { movie ->
-                        MovieGridItem(
-                            movie = movie,
-                            onClick = { onMovieClick(movie) }
-                        )
-                    }
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(filteredMovies, key = { it.id ?: "" }) { movie ->
+                    MovieCard(
+                        movie = movie,
+                        onClick = { onMovieClick(movie) },
+                        onFavoriteClick = { favMovie ->
+                            viewModel.toggleFavorite(favMovie)
+                        }
+                    )
                 }
             }
         }
     }
 }
-
-@Composable
-fun MovieGridItem(
-    movie: MovieFB,
-    onClick: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .clickable { onClick() }
-            .fillMaxWidth()
-    ) {
-
-        // Poster
-        AsyncImage(
-            model = movie.posterurl,
-            contentDescription = movie.title,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .height(170.dp)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .background(DarkPurple)
-        )
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-        // Title
-        Text(
-            text = movie.title,
-            color = Color.White,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        // Rating
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                imageVector = Icons.Default.Star,
-                contentDescription = "Rating",
-                tint = Color.Yellow,
-                modifier = Modifier.size(14.dp)
-            )
-
-            Spacer(modifier = Modifier.width(4.dp))
-
-            Text(
-                text = movie.averageRating.toString(),
-                color = Color.White,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
 
 
 @Composable
@@ -233,119 +201,3 @@ fun SearchBar(
         shape = RoundedCornerShape(12.dp)
     )
 }
-
-@Composable
-private fun FeaturedMovie(
-    movie: Movie,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp)
-            .padding(horizontal = 16.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .clickable(onClick = onClick)
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Basecolor,
-                        Turquoise
-                    )
-                )
-            )
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.2f))
-        )
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black)
-                    )
-                )
-                .padding(16.dp)
-        ) {
-            Text(
-                text = movie.title.uppercase(),
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color.White,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
-    }
-}
-
-@Composable
-private fun SectionTitle(title: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = title,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
-        Text(
-            text = "See all",
-            fontSize = 14.sp,
-            color = Color.Gray,
-            modifier = Modifier.clickable { }
-        )
-    }
-}
-
-//@Composable
-//private fun NewMoviesRow(
-//    movies: List<Movie>,
-//    onMovieClick: (Int) -> Unit
-//) {
-//    LazyRow(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(horizontal = 16.dp),
-//        horizontalArrangement = Arrangement.spacedBy(12.dp),
-//        contentPadding = PaddingValues(vertical = 8.dp)
-//    ) {
-//        items(movies) { movie ->
-//            MovieCard(
-//                movie = movie,
-//                onClick = { onMovieClick(movie.movieId) }
-//            )
-//        }
-//    }
-//}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

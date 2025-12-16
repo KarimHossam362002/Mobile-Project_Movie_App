@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.screens
 
+import MovieFB
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -12,21 +13,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.movieapp.data.firebase.MovieFB
+
 import com.example.movieapp.ui.components.MovieCard
 import com.example.movieapp.ui.theme.*
+import com.example.movieapp.ui.viewmodel.HomeViewModel
 
 @Composable
 fun FavoritesContent(
-    movies: List<MovieFB>,
+    viewModel: HomeViewModel,
     onMovieClick: (Int) -> Unit
 ) {
-    var favoriteMovies by remember { mutableStateOf(listOf<MovieFB>()) }
+    val favoriteMovies by viewModel.favorites
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Basecolor)
+            .background(Color.Black)
     ) {
 
         Box(
@@ -64,7 +66,10 @@ fun FavoritesContent(
                 items(favoriteMovies) { movie ->
                     MovieCard(
                         movie = movie,
-                        onClick = { onMovieClick(movie.id) }
+                        onClick = {
+                            movie.id?.toIntOrNull()?.let { onMovieClick(it) }
+                        },
+                        onFavoriteClick = { viewModel.toggleFavorite(movie) }
                     )
                 }
             }
