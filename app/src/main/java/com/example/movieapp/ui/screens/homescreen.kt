@@ -56,7 +56,7 @@ fun HomeScreen(
                 NavigationTab.HOME -> HomeContent(
                     movies = movies,
                     isLoading = isLoading,
-                    viewModel = viewModel,  // <--- تمرير الـ ViewModel
+                    viewModel = viewModel,
                     onMovieClick = { movie ->
                         onMovieClick(movie.id?.toInt() ?: 0)
                     }
