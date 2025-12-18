@@ -168,11 +168,10 @@ app/src/main/java/com/example/movieapp/
 
 
 
-▶️ How to Run
-Android
-Open project in Android Studio
-Sync Gradle
-Run app on emulator or device
+# ▶️ How to Run Android Open project in Android Studio
+
+- Sync Gradle
+- Run app on emulator or device
 
 Flutter Module
 
