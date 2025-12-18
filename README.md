@@ -161,8 +161,8 @@ app/src/main/java/com/example/movieapp/
 📸 Screenshots
 
 <p align="center">
-<a href="https://l.top4top.io/p_363995nbn1.png" target="_blank">
-<img src="https://l.top4top.io/p_363995nbn1.png" alt="UI design images" border="0" width="700" />
+<a href="https://a.top4top.io/p_36396jt9y1.png" target="_blank">
+<img src="https://a.top4top.io/p_36396jt9y1.png" alt="UI design images" border="0" width="700" />
 </a>
 </p>
 
