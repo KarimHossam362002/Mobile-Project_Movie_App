@@ -58,102 +58,106 @@ app/src/main/java/com/example/movieapp/
 ```
 
 
-# Movie App
+#!/bin/bash
 
-# Overview
-# android movie application built with jetpack compose, room, firebase
-# follows mvvm architecture
-# project is divided into roles for clarity and collaboration
+Movie App Readme
 
-# Architecture
-# ui layer: jetpack compose screens and components
-# viewmodel layer: state and business logic
-# data layer: repository, room database, firebase
-# testing: unit tests, ui tests, github actions
+Overview
+Android movie application built with Jetpack Compose, Room, and Firebase.
+Follows MVVM architecture.
+Project is divided into roles for clarity and collaboration.
 
-# Member 1 - android backend and database
-# responsible for data layer
+Architecture
+UI Layer: Jetpack Compose screens and components
+ViewModel Layer: State management and business logic
+Data Layer: Repository, Room database, Firebase
+Testing: Unit tests, UI tests, GitHub Actions
 
-# room database
-# define MovieEntity.kt
-# create MovieDao.kt with insert, query, delete
-# setup AppDatabase.kt
-# add type converters if needed (e.g. list of genres)
+Member 1 – Android Backend And Database
+Responsible for the data layer.
 
-# data models
-# refine MovieFB.kt as firebase dto
-# mapping between MovieFB and MovieEntity
+Room Database
+Define MovieEntity.kt
+Create MovieDao.kt with insert, query, delete
+Set up AppDatabase.kt
+Add type converters if needed (for example, list of genres)
 
-# repository
-# implement MovieRepository.kt
-# functions:
-# - getMovies()
-# - getMovieById()
-# - toggleFavorite()
-# logic:
-# - read from room first
-# - fetch from firebase if data is missing or stale
-# - cache result locally
+Data Models
+Refine MovieFB.kt as Firebase DTO
+Mapping between MovieFB and MovieEntity
 
-# Member 2 - android ui and frontend
-# responsible for jetpack compose ui
+Repository
+Implement MovieRepository.kt
+Functions:
+getMovies()
+getMovieById()
+toggleFavorite()
 
-# Screens
-# HomeScreen.kt
-# MovieDetailsScreen.kt
-# FavoritesScreen.kt
-# SearchScreen.kt
-# split homescreen into home, search, favorites
-# use LazyColumn and LazyVerticalGrid
+Logic
+Read from Room first
+Fetch from Firebase if data is missing or stale
+Cache result locally
 
-# Ui components
-# reusable components in ui/components
-# MovieCard
-# SearchBar
-# RatingStars
-# support themes and different screen sizes
+Member 2 – Android UI And Frontend
+Responsible for Jetpack Compose UI.
 
-# State handling
-# observe viewmodel state
-# handle clicks and text input
-# send events to viewmodel
-# handle navigation
+Screens
+HomeScreen.kt
+MovieDetailsScreen.kt
+FavoritesScreen.kt
+SearchScreen.kt
+Split HomeScreen into Home, Search, Favorites
+Use LazyColumn and LazyVerticalGrid
 
-# Member 3 - networking and flutter
-# responsible for firebase and flutter module
+UI Components
+Reusable components in ui/components
+MovieCard
+SearchBar
+RatingStars
+Support themes and different screen sizes
 
-# Firebase
-# implement FirebaseService.kt
-# fetch all movies
-# fetch movie by id
-# update movie data (favorites)
-# implement login, register, logout
-# create AuthViewModel
-# keep MovieFB in sync with firebase
+State Handling
+Observe ViewModel state
+Handle clicks and text input
+Send events to ViewModel
+Handle navigation
 
-# Flutter module (optional)
-# setup flutter module
-# build flutter ui (profile or settings)
-# use MethodChannel for kotlin <-> dart communication
+Member 3 – Networking And Flutter
+Responsible for Firebase and Flutter module.
 
-# Member 4 - testing, documentation, github
-# responsible for quality and collaboration
+Firebase
+Implement FirebaseService.kt
+Fetch all movies
+Fetch movie by ID
+Update movie data (favorites)
+Implement login, register, logout
+Create AuthViewModel
+Keep MovieFB in sync with Firebase
 
-# Github
-# setup repository
-# protect main branch
-# review and merge pull requests
-# resolve conflicts
+Flutter Module (Optional)
+Set up Flutter module
+Build Flutter UI (profile or settings)
+Use MethodChannel for Kotlin to Dart communication
 
-# Testing
-# unit tests for viewmodels and repository
-# ui tests using compose test api
-# ci with github actions on every pull request
+Member 4 – Testing, Documentation, And GitHub
+Responsible for quality and collaboration.
 
-# Documentation
-# maintain readme
-# document architecture decisions
-# add kdoc for public classes and functions
+GitHub
+Set up repository
+Protect main branch
+Review and merge pull requests
+Resolve conflicts
+
+Testing
+Unit tests for ViewModels and Repository
+UI tests using Compose Test API
+CI using GitHub Actions on every pull request
+
+Documentation
+Maintain README
+Document architecture decisions
+Add KDoc for public classes and functions
+
 
 
 
