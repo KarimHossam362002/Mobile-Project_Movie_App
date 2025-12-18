@@ -57,211 +57,103 @@ app/src/main/java/com/example/movieapp/
 
 ```
 
-# =========================================================
-# MOVIE APP – TEAM ROLES & RESPONSIBILITIES
-# =========================================================
 
-# ---------------------------------------------------------
-# PROJECT OVERVIEW
-# ---------------------------------------------------------
-# Android Movie Application built using:
-# - Jetpack Compose
-# - Room Database
-# - Firebase
-# - MVVM Architecture
-#
-# The project is divided into clear roles to ensure:
-# - Scalability
-# - Maintainability
-# - Efficient collaboration
+# Movie App
 
-# ---------------------------------------------------------
-# PROJECT ARCHITECTURE
-# ---------------------------------------------------------
-# - UI Layer        : Jetpack Compose screens & components
-# - ViewModel Layer : State management & business logic
-# - Data Layer      : Repository, Room, Firebase
-# - Testing & CI    : Unit tests, UI tests, GitHub Actions
+# Overview
+# android movie application built with jetpack compose, room, firebase
+# follows mvvm architecture
+# project is divided into roles for clarity and collaboration
 
+# Architecture
+# ui layer: jetpack compose screens and components
+# viewmodel layer: state and business logic
+# data layer: repository, room database, firebase
+# testing: unit tests, ui tests, github actions
 
-# =========================================================
-# TEAM ROLES & RESPONSIBILITIES
-# =========================================================
+# Member 1 - android backend and database
+# responsible for data layer
 
-# ---------------------------------------------------------
-# MEMBER 1 – Android Backend & Database Developer
-# ---------------------------------------------------------
-# Role Summary:
-# Owns the entire data layer. Ensures data is fetched,
-# cached, and delivered reliably to ViewModels.
+# room database
+# define MovieEntity.kt
+# create MovieDao.kt with insert, query, delete
+# setup AppDatabase.kt
+# add type converters if needed (e.g. list of genres)
 
-# Core Responsibilities:
-#
-# 1) Local Database (Room)
-# ---------------------------------------------------------
-# - Define MovieEntity.kt
-# - Create MovieDao.kt with:
-#     @Insert
-#     @Query
-#     @Delete
-# - Set up AppDatabase.kt
-# - Implement TypeConverters if needed
-#   (e.g., list of genres)
-#
-# 2) Data Models
-# ---------------------------------------------------------
-# - Refine MovieFB.kt as Firebase DTO
-# - Mapping functions:
-#     MovieFB -> MovieEntity
-#     MovieEntity -> MovieFB
-#
-# 3) Repository
-# ---------------------------------------------------------
-# - Implement MovieRepository.kt
-# - Core functions:
-#     getMovies()
-#     getMovieById()
-#     toggleFavorite()
-# - Logic:
-#     * Load from Room first
-#     * If missing or stale:
-#         -> Fetch from Firebase
-#     * Cache results locally
+# data models
+# refine MovieFB.kt as firebase dto
+# mapping between MovieFB and MovieEntity
 
+# repository
+# implement MovieRepository.kt
+# functions:
+# - getMovies()
+# - getMovieById()
+# - toggleFavorite()
+# logic:
+# - read from room first
+# - fetch from firebase if data is missing or stale
+# - cache result locally
 
-# ---------------------------------------------------------
-# MEMBER 2 – Android UI/UX & Frontend Developer
-# ---------------------------------------------------------
-# Role Summary:
-# Builds responsive UI using Jetpack Compose and
-# consumes ViewModel state.
+# Member 2 - android ui and frontend
+# responsible for jetpack compose ui
 
-# Core Responsibilities:
-#
-# 1) Screen Implementation
-# ---------------------------------------------------------
-# - Screens:
-#     HomeScreen.kt
-#     MovieDetailsScreen.kt
-#     FavoritesScreen.kt
-#     SearchScreen.kt
-# - Refactor homescreen.kt into:
-#     Home
-#     Search
-#     Favorites
-# - Use:
-#     LazyVerticalGrid
-#     LazyColumn
-#
-# 2) UI Components
-# ---------------------------------------------------------
-# - Reusable components (ui/components/):
-#     MovieCard
-#     SearchBar
-#     RatingStars
-# - Ensure:
-#     * Theme support
-#     * Responsive layouts
-#
-# 3) State Handling
-# ---------------------------------------------------------
-# - Observe:
-#     movie lists
-#     loading states
-#     error states
-# - Handle user actions:
-#     clicks
-#     text input
-# - Forward events to ViewModels
-# - Implement navigation logic
+# Screens
+# HomeScreen.kt
+# MovieDetailsScreen.kt
+# FavoritesScreen.kt
+# SearchScreen.kt
+# split homescreen into home, search, favorites
+# use LazyColumn and LazyVerticalGrid
 
+# Ui components
+# reusable components in ui/components
+# MovieCard
+# SearchBar
+# RatingStars
+# support themes and different screen sizes
 
-# ---------------------------------------------------------
-# MEMBER 3 – Networking & API + Flutter Module Developer
-# ---------------------------------------------------------
-# Role Summary:
-# Manages Firebase communication and Flutter integration.
+# State handling
+# observe viewmodel state
+# handle clicks and text input
+# send events to viewmodel
+# handle navigation
 
-# Core Responsibilities:
-#
-# 1) Networking Layer (Firebase)
-# ---------------------------------------------------------
-# - Implement FirebaseService.kt
-# - Functions:
-#     fetch all movies
-#     fetch movie by ID
-#     update movie data (favorites)
-# - Authentication:
-#     Login
-#     Register
-#     Logout
-# - Create AuthViewModel
-# - Align Firebase data with MovieFB model
-#
-# 2) Flutter Module Integration (Optional)
-# ---------------------------------------------------------
-# - Set up Flutter module
-# - Build Flutter UI (profile/settings)
-# - Use MethodChannel:
-#     Kotlin <-> Dart
-# - Enable data exchange
+# Member 3 - networking and flutter
+# responsible for firebase and flutter module
 
+# Firebase
+# implement FirebaseService.kt
+# fetch all movies
+# fetch movie by id
+# update movie data (favorites)
+# implement login, register, logout
+# create AuthViewModel
+# keep MovieFB in sync with firebase
 
-# ---------------------------------------------------------
-# MEMBER 4 – Testing, Documentation & GitHub Manager
-# ---------------------------------------------------------
-# Role Summary:
-# Ensures quality, stability, documentation, and
-# smooth collaboration.
+# Flutter module (optional)
+# setup flutter module
+# build flutter ui (profile or settings)
+# use MethodChannel for kotlin <-> dart communication
 
-# Core Responsibilities:
-#
-# 1) Version Control (GitHub)
-# ---------------------------------------------------------
-# - Set up repository
-# - Branch protection:
-#     PR required for main
-# - Review & merge PRs
-# - Resolve merge conflicts
-# - Maintain main branch stability
-#
-# 2) Testing
-# ---------------------------------------------------------
-# - Unit tests:
-#     ViewModels
-#     MovieRepository
-# - UI tests (Compose):
-#     navigation
-#     user flows
-# - CI/CD:
-#     GitHub Actions
-#     run tests on every PR
-#
-# 3) Documentation
-# ---------------------------------------------------------
-# - Maintain README.md
-# - Document architecture decisions
-# - Add KDoc for:
-#     public classes
-#     public functions
+# Member 4 - testing, documentation, github
+# responsible for quality and collaboration
 
+# Github
+# setup repository
+# protect main branch
+# review and merge pull requests
+# resolve conflicts
 
-# ---------------------------------------------------------
-# GETTING STARTED
-# ---------------------------------------------------------
-# - Add setup instructions
-# - Firebase configuration
-# - Build & run steps
+# Testing
+# unit tests for viewmodels and repository
+# ui tests using compose test api
+# ci with github actions on every pull request
 
-
-# ---------------------------------------------------------
-# LICENSE
-# ---------------------------------------------------------
-# Add license information if applicable
-
-# =========================================================
-# END OF FILE
-# =========================================================
+# Documentation
+# maintain readme
+# document architecture decisions
+# add kdoc for public classes and functions
 
 
 
